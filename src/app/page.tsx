@@ -64,9 +64,6 @@ export default function Home() {
         </div>
         <Next />
 
-        <ExampleComponent />
-        <OhterComponent />
-
         <Image
           className="dark:invert"
           src="/next.svg"
