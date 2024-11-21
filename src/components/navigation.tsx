@@ -1,4 +1,4 @@
-import { ArchiveX, Command, File, Inbox, Send, Trash2 } from "lucide-react";
+import { Command } from "lucide-react";
 
 import {
   Sidebar,
@@ -18,11 +18,9 @@ import React from "react";
 
 import { navMain } from "@/data/navMain";
 import { user } from "@/data/user";
-import { mails as _mails } from "@/data/mails";
 
 export function Navigation() {
   const [activeItem, setActiveItem] = React.useState(navMain[0]);
-  const [mails, setMails] = React.useState(_mails);
   const { setOpen } = useSidebar();
 
   return (
@@ -61,13 +59,6 @@ export function Navigation() {
                     }}
                     onClick={() => {
                       setActiveItem(item);
-                      const mail = _mails.sort(() => Math.random() - 0.5);
-                      setMails(
-                        mail.slice(
-                          0,
-                          Math.max(5, Math.floor(Math.random() * 10) + 1)
-                        )
-                      );
                       setOpen(true);
                     }}
                     isActive={activeItem.title === item.title}
