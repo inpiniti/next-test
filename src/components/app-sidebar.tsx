@@ -11,17 +11,22 @@ import {
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Navigation } from "@/components/navigation";
+import AppSidebarItem from "@/components/app-sidebar-item";
 
 import React from "react";
 
 import { navMain } from "@/data/navMain";
-import { mails as _mails } from "@/data/mails";
+//import { mails as _mails } from "@/data/mails";
+
+import IStock from "@/interface/IStock";
+import useLiveNasdaq from "@/hooks/useLiveNasdaq";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   // Note: I'm using state to show active item.
   // IRL you should use the url/router.
   const [activeItem] = React.useState(navMain[0]);
-  const [mails] = React.useState(_mails);
+  const { data: liveNasdaq } = useLiveNasdaq();
+  //const [mails] = React.useState(_mails);
 
   return (
     <Sidebar
@@ -53,21 +58,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarContent>
           <SidebarGroup className="px-0">
             <SidebarGroupContent>
-              {mails.map((mail) => (
-                <a
-                  href="#"
-                  key={mail.email}
-                  className="flex flex-col items-start gap-2 whitespace-nowrap border-b p-4 text-sm leading-tight last:border-b-0 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
-                >
-                  <div className="flex w-full items-center gap-2">
-                    <span>{mail.name}</span>{" "}
-                    <span className="ml-auto text-xs">{mail.date}</span>
-                  </div>
-                  <span className="font-medium">{mail.subject}</span>
-                  <span className="line-clamp-2 w-[260px] whitespace-break-spaces text-xs">
-                    {mail.teaser}
-                  </span>
-                </a>
+              {liveNasdaq?.map((stock: IStock) => (
+                <AppSidebarItem key={stock.name} stock={stock} />
               ))}
             </SidebarGroupContent>
           </SidebarGroup>
