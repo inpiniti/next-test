@@ -7,16 +7,13 @@ import Parser from "html-react-parser";
 
 import usePostStore from "@/stores/post";
 
-import ExampleComponent from "./components/example-component";
-import OhterComponent from "./components/other-components";
-
 function Id() {
-  const postId = usePostStore((state: any) => state.postId);
+  const postId = usePostStore((state) => state.postId);
   return <h1>{Math.round(postId)}</h1>;
 }
 
 function Next() {
-  const incrementPostId = usePostStore((state: any) => state.incrementPostId);
+  const incrementPostId = usePostStore((state) => state.incrementPostId);
   return (
     <button onClick={incrementPostId}>
       <div>→</div>
