@@ -3,8 +3,13 @@ import React from "react";
 import IStock from "@/interface/IStock";
 import { formatDistanceToNow } from "date-fns";
 import { ko } from "date-fns/locale";
+import useLiveNasdaqStore from "@/stores/useLiveNasdaqStore";
 
 const AppSidebarItem = ({ stock }: { stock: IStock }) => {
+  const setLiveNasdaqId = useLiveNasdaqStore((state) => state.setLiveNasdaqId);
+  const liveNasdaqName = useLiveNasdaqStore((state) => state.liveNasdaqName);
+  const isActive = stock.name === liveNasdaqName;
+
   const changeColor =
     stock.change && stock.change > 0 ? "text-red-500" : "text-blue-500";
   const formattedChange =
@@ -18,7 +23,12 @@ const AppSidebarItem = ({ stock }: { stock: IStock }) => {
     <a
       href="#"
       key={stock.name}
-      className="flex flex-col items-start gap-2 whitespace-nowrap border-b p-4 text-sm leading-tight last:border-b-0 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+      className={`flex flex-col items-start gap-2 whitespace-nowrap border-b p-4 text-sm leading-tight last:border-b-0 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${
+        isActive
+          ? "bg-black text-white hover:bg-black hover:text-white"
+          : "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+      }`}
+      onClick={() => setLiveNasdaqId(stock.name)}
     >
       <div className="flex w-full items-center gap-2 justify-between">
         <span>{stock.name}</span>

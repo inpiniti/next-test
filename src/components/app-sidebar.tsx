@@ -19,13 +19,15 @@ import { navMain } from "@/data/navMain";
 //import { mails as _mails } from "@/data/mails";
 
 import IStock from "@/interface/IStock";
-import useLiveNasdaq from "@/hooks/useLiveNasdaq";
+import useLiveNasdaqQuery from "@/hooks/useLiveNasdaqQuery";
+import useLiveNasdaqStore from "@/stores/useLiveNasdaqStore";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   // Note: I'm using state to show active item.
   // IRL you should use the url/router.
   const [activeItem] = React.useState(navMain[0]);
-  const { data: liveNasdaq } = useLiveNasdaq();
+  const query = useLiveNasdaqQuery();
+  const liveNasdaqList = useLiveNasdaqStore((state) => state.liveNasdaqList);
   //const [mails] = React.useState(_mails);
 
   return (
@@ -58,7 +60,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarContent>
           <SidebarGroup className="px-0">
             <SidebarGroupContent>
-              {liveNasdaq?.map((stock: IStock) => (
+              {query.isLoading && <div>로딩 중...</div>}
+              {query.error && <div>에러 발생: {query.error.message}</div>}
+              {liveNasdaqList?.map((stock: IStock) => (
                 <AppSidebarItem key={stock.name} stock={stock} />
               ))}
             </SidebarGroupContent>
