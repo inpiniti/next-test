@@ -15,6 +15,7 @@ export function Header() {
       data-testid="potatomap-component"
       className="sticky top-0 flex shrink-0 items-center gap-2 border-b bg-background p-4"
     >
+      header
       <SidebarTrigger className="-ml-1" />
       <Separator orientation="vertical" className="mr-2 h-4" />
       <Breadcrumb>

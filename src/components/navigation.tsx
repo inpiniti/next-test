@@ -29,6 +29,7 @@ export function Navigation() {
       collapsible="none"
       className="!w-[calc(var(--sidebar-width-icon)_+_1px)] border-r"
     >
+      navigation
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>

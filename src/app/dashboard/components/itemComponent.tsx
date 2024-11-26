@@ -5,9 +5,11 @@ import { formatDistanceToNow } from "date-fns";
 import { ko } from "date-fns/locale";
 import useLiveNasdaqStore from "@/stores/useLiveNasdaqStore";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+// import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
-const AppSidebarItem = ({ stock }: { stock: IStock }) => {
+import { Chart } from "./chart";
+
+const ItemComponent = ({ stock }: { stock: IStock }) => {
   const setLiveNasdaqId = useLiveNasdaqStore((state) => state.setLiveNasdaqId);
   const liveNasdaqName = useLiveNasdaqStore((state) => state.liveNasdaqName);
   const isActive = stock.name === liveNasdaqName;
@@ -32,14 +34,6 @@ const AppSidebarItem = ({ stock }: { stock: IStock }) => {
       }`}
       onClick={() => setLiveNasdaqId(stock.name)}
     >
-      <Avatar>
-        <AvatarImage
-          src={`https://s3-symbol-logo.tradingview.com/${stock.logoid}--big.svg`}
-          alt="@radix-vue"
-        />
-        <AvatarFallback>{stock.description?.slice(0, 2)}</AvatarFallback>
-      </Avatar>
-
       <div className="flex w-full flex-col items-start gap-2 whitespace-nowrap border-b text-sm leading-tight last:border-b-0">
         <div className="flex w-full items-center gap-2 justify-between">
           <span>{stock.name}</span>
@@ -57,8 +51,10 @@ const AppSidebarItem = ({ stock }: { stock: IStock }) => {
           <span>거래량 {Number(stock.volume_change).toFixed(2)}%</span>
         </span>
       </div>
+
+      <Chart stock={stock} />
     </a>
   );
 };
 
-export default AppSidebarItem;
+export default ItemComponent;

@@ -39,6 +39,7 @@ export function NavUser({
 
   return (
     <SidebarMenu data-testid="potatomap-component">
+      nav-user
       <SidebarMenuItem>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

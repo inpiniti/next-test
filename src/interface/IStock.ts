@@ -97,51 +97,39 @@ export default interface IStock {
   c_c_i20?: number; // CCI (20일)
   stoch_k?: number; // 스토캐스틱 K
   stoch_d?: number; // 스토캐스틱 D
-  change_10m?: number; // 10분 변화량
-  change_11m?: number; // 11분 변화량
-  change_1d?: number; // 1일 변화량
 
-  change_1m?: number; // 1개월 변화량
-  change_1w?: number; // 1주 변화량
-  change_2d?: number; // 2일 변화량
-  change_2m?: number; // 2개월 변화량
-  change_2w?: number; // 2주 변화량
-  change_3d?: number; // 3일 변화량
-  change_3m?: number; // 3개월 변화량
-  change_3w?: number; // 3주 변화량
-  change_4d?: number; // 4일 변화량
-  change_4m?: number; // 4개월 변화량
-  change_4w?: number; // 4주 변화량
-  change_5d?: number; // 5일 변화량
-  change_5m?: number; // 5개월 변화량
-  change_6d?: number; // 6일 변화량
-  change_6m?: number; // 6개월 변화량
-  change_7m?: number; // 7개월 변화량
-  change_8m?: number; // 8개월 변화량
-  change_9m?: number; // 9개월 변화량
-
-  change_1h?: number; // 1시간 변화량
-  change_2h?: number; // 2시간 변화량
-  change_3h?: number; // 3시간 변화량
-  change_4h?: number; // 4시간 변화량
-  change_5h?: number; // 5시간 변화량
-  change_6h?: number; // 6시간 변화량
-  change_7h?: number; // 7시간 변화량
-  change_8h?: number; // 8시간 변화량
-  change_9h?: number; // 9시간 변화량
-  change_10h?: number; // 10시간 변화량
-  change_11h?: number; // 11시간 변화량
-  change_12h?: number; // 12시간 변화량
-  change_13h?: number; // 13시간 변화량
-  change_14h?: number; // 14시간 변화량
-  change_15h?: number; // 15시간 변화량
-  change_16h?: number; // 16시간 변화량
-  change_17h?: number; // 17시간 변화량
-  change_18h?: number; // 18시간 변화량
-  change_19h?: number; // 19시간 변화량
-  change_20h?: number; // 20시간 변화량
-  change_21h?: number; // 21시간 변화량
-  change_22h?: number; // 22시간 변화량
+  full_model_1h_prediction?: number; // 1시간 예측
+  full_model_2h_prediction?: number; // 2시간 예측
+  full_model_3h_prediction?: number; // 3시간 예측
+  full_model_4h_prediction?: number; // 4시간 예측
+  full_model_5h_prediction?: number; // 5시간 예측
+  full_model_6h_prediction?: number; // 6시간 예측
+  full_model_7h_prediction?: number; // 7시간 예측
+  full_model_8h_prediction?: number; // 8시간 예측
+  full_model_9h_prediction?: number; // 9시간 예측
+  full_model_10h_prediction?: number; // 10시간 예측
+  full_model_11h_prediction?: number; // 11시간 예측
+  full_model_12h_prediction?: number; // 12시간 예측
+  full_model_13h_prediction?: number; // 13시간 예측
+  full_model_14h_prediction?: number; // 14시간 예측
+  full_model_15h_prediction?: number; // 15시간 예측
+  full_model_16h_prediction?: number; // 16시간 예측
+  full_model_17h_prediction?: number; // 17시간 예측
+  full_model_18h_prediction?: number; // 18시간 예측
+  full_model_19h_prediction?: number; // 19시간 예측
+  full_model_20h_prediction?: number; // 20시간 예측
+  full_model_21h_prediction?: number; // 21시간 예측
+  full_model_22h_prediction?: number; // 22시간 예측
+  full_model_23h_prediction?: number; // 23시간 예측
 
   created_at: Date; // 생성 일자
+
+  minChange?: number; // 최소 변화량
+  avgChange?: number; // 평균 변화량
+  maxChange?: number; // 최대 변화량
+  chartData?: Array<{
+    name: string;
+    key: string;
+    change: number;
+  }>; // 차트 데이터
 }
