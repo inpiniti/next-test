@@ -212,9 +212,7 @@ export default function RootLayout({
             <Sidebar className="shrink-0">
               <SidebarHeader>
                 <SidebarMenu>
-                  <SidebarMenuItem>
-                    <Input />
-                  </SidebarMenuItem>
+                  <SidebarMenuItem>sidbar header</SidebarMenuItem>
                 </SidebarMenu>
               </SidebarHeader>
               <SidebarContent>
