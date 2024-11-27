@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { persist, devtools } from "zustand/middleware";
+import { devtools } from "zustand/middleware";
 import IStock from "@/interface/IStock";
 
 interface LiveNasdaqStore {
@@ -11,25 +11,18 @@ interface LiveNasdaqStore {
 }
 
 const useLiveNasdaqStore = create<LiveNasdaqStore>()(
-  devtools(
-    persist(
-      (set, get) => ({
-        liveNasdaqName: null,
-        liveNasdaqList: [],
-        setLiveNasdaqId: (name: string) => set({ liveNasdaqName: name }),
-        setLiveNasdaqList: (data: IStock[]) => set({ liveNasdaqList: data }),
-        getLiveNasdaq: () => {
-          const { liveNasdaqName, liveNasdaqList } = get();
-          return liveNasdaqList.find(
-            (item: IStock) => item.name === liveNasdaqName
-          );
-        },
-      }),
-      {
-        name: "live-nasdaq-storage", // 로컬 스토리지에 저장될 키 이름
-      }
-    )
-  )
+  devtools((set, get) => ({
+    liveNasdaqName: null,
+    liveNasdaqList: [],
+    setLiveNasdaqId: (name: string) => set({ liveNasdaqName: name }),
+    setLiveNasdaqList: (data: IStock[]) => set({ liveNasdaqList: data }),
+    getLiveNasdaq: () => {
+      const { liveNasdaqName, liveNasdaqList } = get();
+      return liveNasdaqList.find(
+        (item: IStock) => item.name === liveNasdaqName
+      );
+    },
+  }))
 );
 
 export default useLiveNasdaqStore;
