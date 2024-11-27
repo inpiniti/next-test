@@ -2,6 +2,15 @@
 
 import { Input } from "@/components/ui/input";
 import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
@@ -16,6 +25,9 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import useLiveNasdaqQuery from "@/hooks/useLiveNasdaqQuery";
+import useFilterStore from "@/stores/useFilterStore";
+import useLiveNasdaqStore from "@/stores/useLiveNasdaqStore";
+import { useMemo } from "react";
 
 export default function DashboardLayout({
   children,
@@ -23,6 +35,15 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }>) {
   const query = useLiveNasdaqQuery();
+  const filter = useFilterStore((state) => state.filter);
+  const setFilter = useFilterStore((state) => state.setFilter);
+  const liveNasdaqList = useLiveNasdaqStore((state) => state.liveNasdaqList);
+
+  const uniqueSectors = useMemo(() => {
+    return Array.from(
+      new Set(liveNasdaqList.map((item) => item.sector_tr))
+    ).filter((sector): sector is string => sector !== undefined);
+  }, [liveNasdaqList]);
 
   return (
     <SidebarProvider>
@@ -70,37 +91,112 @@ export default function DashboardLayout({
                 <SidebarMenuItem>
                   <div className="p-2 text-xs">
                     종목 검색
-                    <Input className="bg-white" />
+                    <Input
+                      className="bg-white"
+                      value={filter.stock}
+                      onChange={(e) =>
+                        setFilter({ ...filter, stock: e.target.value })
+                      }
+                    />
                   </div>
                 </SidebarMenuItem>
                 <SidebarMenuItem>
                   <div className="p-2 text-xs">
                     색터 필터
-                    <Input className="bg-white" />
+                    <Select
+                      value={filter.sector}
+                      onValueChange={(value) =>
+                        setFilter({ ...filter, sector: value })
+                      }
+                    >
+                      <SelectTrigger className="bg-white">
+                        <SelectValue placeholder="색터 필터를 선택하세요." />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectLabel>색터 필터</SelectLabel>
+                          <SelectItem value="all">전체</SelectItem>
+                          {uniqueSectors?.map((sector: string) => (
+                            <SelectItem key={sector} value={sector}>
+                              {sector}
+                            </SelectItem>
+                          ))}
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
                   </div>
                 </SidebarMenuItem>
                 <SidebarMenuItem>
                   <div className="p-2 text-xs">
                     최소 거래량
-                    <Input className="bg-white" />
+                    <Input
+                      className="bg-white"
+                      value={filter.minVolume}
+                      onChange={(e) =>
+                        setFilter({
+                          ...filter,
+                          minVolume: Number(e.target.value),
+                        })
+                      }
+                    />
                   </div>
                 </SidebarMenuItem>
                 <SidebarMenuItem>
                   <div className="p-2 text-xs">
                     최소 최소 상승가능성률
-                    <Input className="bg-white" />
+                    <Input
+                      className="bg-white"
+                      value={filter.minGrowthRate}
+                      onChange={(e) =>
+                        setFilter({
+                          ...filter,
+                          minGrowthRate: Number(e.target.value),
+                        })
+                      }
+                    />
                   </div>
                 </SidebarMenuItem>
                 <SidebarMenuItem>
                   <div className="p-2 text-xs">
                     최소 평균 상승가능성률
-                    <Input className="bg-white" />
+                    <Input
+                      className="bg-white"
+                      value={filter.avgGrowthRate}
+                      onChange={(e) =>
+                        setFilter({
+                          ...filter,
+                          avgGrowthRate: Number(e.target.value),
+                        })
+                      }
+                    />
                   </div>
                 </SidebarMenuItem>
                 <SidebarMenuItem>
                   <div className="p-2 text-xs">
                     표시 아이탬 수
-                    <Input className="bg-white" />
+                    <Select
+                      value={filter.displayItemCount.toString()}
+                      onValueChange={(value) =>
+                        setFilter({
+                          ...filter,
+                          displayItemCount: Number(value),
+                        })
+                      }
+                    >
+                      <SelectTrigger className="bg-white">
+                        <SelectValue placeholder="아이탬 수를 선택하세요." />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectLabel>표시 아이탬 수</SelectLabel>
+                          <SelectItem value="30">30</SelectItem>
+                          <SelectItem value="50">50</SelectItem>
+                          <SelectItem value="100">100</SelectItem>
+                          <SelectItem value="200">200</SelectItem>
+                          <SelectItem value="500">500</SelectItem>
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
                   </div>
                 </SidebarMenuItem>
               </SidebarMenu>
