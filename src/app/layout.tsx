@@ -200,6 +200,10 @@ export default function RootLayout({
 
   return (
     <html lang="en">
+      <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        {/* 기타 head 요소 */}
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
@@ -246,7 +250,7 @@ export default function RootLayout({
               </SidebarContent>
               <SidebarFooter />
             </Sidebar>
-            <div className="w-full h-screen flex flex-col divide-y overflow-hidden">
+            <div className="w-full h-svh flex flex-col divide-y overflow-hidden">
               <HeaderSection />
               <div className="grow-1 h-full overflow-scroll">{children}</div>
             </div>
