@@ -1,5 +1,6 @@
 "use client";
 
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Table,
   TableBody,
@@ -82,8 +83,9 @@ export default function Home() {
   return (
     <>
       <Table>
-        <TableHeader>
+        <TableHeader className="sticky top-0 bg-white z-50 shadow-md">
           <TableRow>
+            <TableHead>logo</TableHead>
             <TableHead>name</TableHead>
             <TableHead>description</TableHead>
             <TableHead>섹터</TableHead>
@@ -150,6 +152,17 @@ export default function Home() {
         <TableBody>
           {sortedData.map((live) => (
             <TableRow key={live.name}>
+              <TableCell>
+                <Avatar className="border">
+                  <AvatarImage
+                    src={`https://s3-symbol-logo.tradingview.com/${live.logoid}--big.svg`}
+                    alt="@radix-vue"
+                  />
+                  <AvatarFallback>
+                    {live.description?.slice(0, 2)}
+                  </AvatarFallback>
+                </Avatar>
+              </TableCell>
               <TableCell>{live.name}</TableCell>
               <TableCell
                 className="truncate max-w-[20ch]"
@@ -158,79 +171,89 @@ export default function Home() {
                 {live.description}
               </TableCell>
               <TableCell className="truncate">{live.sector_tr}</TableCell>
-              <TableCell>{live.close}</TableCell>
+              <TableCell
+                className={`${
+                  Number(live.change) > 0
+                    ? "text-red-500"
+                    : Number(live.change) < 0
+                    ? "text-blue-500"
+                    : ""
+                }`}
+              >
+                {live.close}({Number(live.change).toFixed(2)}%)
+              </TableCell>
               <TableCell>{Number(live.volume).toLocaleString()}</TableCell>
               <TableCell>{live.minChange}%</TableCell>
               <TableCell>{live.avgChange}%</TableCell>
               <TableCell>{live.maxChange}%</TableCell>
               <TableCell>
-                {Number(live.full_model_1h_prediction)?.toFixed(2)}%
+                {(Number(live.full_model_1h_prediction) * 100)?.toFixed(2)}%
               </TableCell>
               <TableCell>
-                {Number(live.full_model_2h_prediction)?.toFixed(2)}%
+                {(Number(live.full_model_2h_prediction) * 100)?.toFixed(2)}%
               </TableCell>
               <TableCell>
-                {Number(live.full_model_3h_prediction)?.toFixed(2)}%
+                {(Number(live.full_model_3h_prediction) * 100)?.toFixed(2)}%
               </TableCell>
               <TableCell>
-                {Number(live.full_model_4h_prediction)?.toFixed(2)}%
+                {(Number(live.full_model_4h_prediction) * 100)?.toFixed(2)}%
               </TableCell>
               <TableCell>
-                {Number(live.full_model_5h_prediction)?.toFixed(2)}%
+                {(Number(live.full_model_5h_prediction) * 100)?.toFixed(2)}%
               </TableCell>
               <TableCell>
-                {Number(live.full_model_6h_prediction)?.toFixed(2)}%
+                {(Number(live.full_model_6h_prediction) * 100)?.toFixed(2)}%
               </TableCell>
               <TableCell>
-                {Number(live.full_model_7h_prediction)?.toFixed(2)}%
+                {(Number(live.full_model_7h_prediction) * 100)?.toFixed(2)}%
               </TableCell>
               <TableCell>
-                {Number(live.full_model_8h_prediction)?.toFixed(2)}%
+                {(Number(live.full_model_8h_prediction) * 100)?.toFixed(2)}%
               </TableCell>
               <TableCell>
-                {Number(live.full_model_9h_prediction)?.toFixed(2)}%
+                {(Number(live.full_model_9h_prediction) * 100)?.toFixed(2)}%
               </TableCell>
               <TableCell>
-                {Number(live.full_model_10h_prediction)?.toFixed(2)}%
+                {(Number(live.full_model_10h_prediction) * 100)?.toFixed(2)}%
               </TableCell>
               <TableCell>
-                {Number(live.full_model_11h_prediction)?.toFixed(2)}%
+                {(Number(live.full_model_11h_prediction) * 100)?.toFixed(2)}%
               </TableCell>
               <TableCell>
-                {Number(live.full_model_12h_prediction)?.toFixed(2)}%
+                {(Number(live.full_model_12h_prediction) * 100)?.toFixed(2)}%
               </TableCell>
               <TableCell>
-                {Number(live.full_model_13h_prediction)?.toFixed(2)}%
+                {(Number(live.full_model_13h_prediction) * 100)?.toFixed(2)}%
               </TableCell>
               <TableCell>
-                {Number(live.full_model_14h_prediction)?.toFixed(2)}%
+                {(Number(live.full_model_14h_prediction) * 100)?.toFixed(2)}%
               </TableCell>
               <TableCell>
-                {Number(live.full_model_15h_prediction)?.toFixed(2)}%
+                {(Number(live.full_model_15h_prediction) * 100)?.toFixed(2)}%
               </TableCell>
               <TableCell>
-                {Number(live.full_model_16h_prediction)?.toFixed(2)}%
+                {(Number(live.full_model_16h_prediction) * 100)?.toFixed(2)}%
               </TableCell>
               <TableCell>
-                {Number(live.full_model_17h_prediction)?.toFixed(2)}%
+                {(Number(live.full_model_17h_prediction) * 100)?.toFixed(2)}%
               </TableCell>
               <TableCell>
-                {Number(live.full_model_18h_prediction)?.toFixed(2)}%
+                {(Number(live.full_model_18h_prediction) * 100)?.toFixed(2)}%
               </TableCell>
               <TableCell>
-                {Number(live.full_model_19h_prediction)?.toFixed(2)}%
+                {(Number(live.full_model_19h_prediction) * 100)?.toFixed(2)}%
               </TableCell>
               <TableCell>
-                {Number(live.full_model_20h_prediction)?.toFixed(2)}%
+                {(Number(live.full_model_20h_prediction) * 100)?.toFixed(2)}%
               </TableCell>
               <TableCell>
-                {Number(live.full_model_21h_prediction)?.toFixed(2)}%
+                {(Number(live.full_model_21h_prediction) * 100)?.toFixed(2)}%
               </TableCell>
               <TableCell>
-                {Number(live.full_model_22h_prediction)?.toFixed(2)}%
+                {(Number(live.full_model_22h_prediction) * 100)?.toFixed(2)}%
               </TableCell>
               <TableCell>
-                {Number(live.full_model_23h_prediction)?.toFixed(2)}%
+                {(Number(live.full_model_23h_prediction) * 100)?.toFixed(2)}%
               </TableCell>
             </TableRow>
           ))}
