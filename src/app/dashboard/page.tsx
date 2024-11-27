@@ -54,7 +54,7 @@ export default function Page() {
             <TableHead>name</TableHead>
             <TableHead>description</TableHead>
             <TableHead>섹터</TableHead>
-            <TableHead>현재가격</TableHead>
+            <TableHead className="w-10">현재가격</TableHead>
             <TableHead>거래량</TableHead>
             <TableHead
               className={`cursor-pointer ${
