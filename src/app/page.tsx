@@ -1,158 +1,243 @@
 "use client";
 
-import Image from "next/image";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
-import { Suspense, useEffect } from "react";
-import Parser from "html-react-parser";
+import useLiveNasdaqQuery from "@/hooks/useLiveNasdaqQuery";
+import IStock from "@/interface/IStock";
+import useFilterStore from "@/stores/useFilterStore";
+import useLiveNasdaqStore from "@/stores/useLiveNasdaqStore";
+import { useMemo, useState } from "react";
 
-import usePostStore from "@/stores/post";
+export default function Home() {
+  const query = useLiveNasdaqQuery();
+  const liveNasdaqList = useLiveNasdaqStore((state) => state.liveNasdaqList);
+  const filter = useFilterStore((state) => state.filter);
+  const [sortConfig, setSortConfig] = useState<string | null>("minChange");
 
-function Id() {
-  const postId = usePostStore((state) => state.postId);
-  return <h1>{Math.round(postId)}</h1>;
-}
+  const sortedData = useMemo(() => {
+    if (sortConfig !== null) {
+      let filteredData = liveNasdaqList;
 
-function Next() {
-  const incrementPostId = usePostStore((state) => state.incrementPostId);
-  return (
-    <button onClick={incrementPostId}>
-      <div>→</div>
-    </button>
-  );
-}
+      // filter.stock 으로 description 와 name 에서 like 필터
+      // filter.stock 이 빈값이면 전체 데이터를 반환
+      if (filter.stock) {
+        filteredData = filteredData.filter(
+          (item) =>
+            item.name.toLowerCase().includes(filter.stock.toLowerCase()) ||
+            item.description?.toLowerCase().includes(filter.stock.toLowerCase())
+        );
+      }
 
-function PostTitle() {
-  const { postId, postData, fetchPostData } = usePostStore();
+      // // filter.sector 으로 sector_tr 에서 like 필터
+      if (filter.sector && filter.sector !== "all") {
+        filteredData = filteredData.filter((item) =>
+          item.sector_tr?.toLowerCase().includes(filter.sector.toLowerCase())
+        );
+      }
 
-  useEffect(() => {
-    fetchPostData();
-  }, [postId]);
+      // // filter.minVolume 으로 volume 보다 큰 거래량만 필터
+      if (filter.minVolume) {
+        filteredData = filteredData.filter(
+          (item) => Number(item.volume) >= filter.minVolume
+        );
+      }
 
-  if (!postData) {
-    return <div>Loading...</div>;
-  }
+      // // filter.minGrowthRate 으로 minChange 보다 큰 값만 필터
+      if (filter.minGrowthRate) {
+        filteredData = filteredData.filter(
+          (item) => Number(item.minChange) >= filter.minGrowthRate
+        );
+      }
 
-  const { by, text, time, title, url } = postData;
+      // // filter.avgGrowthRate 으로 avgChange 보다 큰 값만 필터
+      if (filter.avgGrowthRate) {
+        filteredData = filteredData.filter(
+          (item) => Number(item.avgChange) >= filter.avgGrowthRate
+        );
+      }
+
+      return [...filteredData]
+        .sort((a, b) => {
+          const aValue = Number(a[sortConfig as keyof IStock]);
+          const bValue = Number(b[sortConfig as keyof IStock]);
+
+          if (aValue < bValue) {
+            return 1;
+          } else {
+            return -1;
+          }
+        })
+        .slice(0, filter.displayItemCount); // 처음 100개 항목만 선택
+    }
+    return liveNasdaqList;
+  }, [liveNasdaqList, sortConfig, filter]);
 
   return (
     <>
-      <h2>{by}</h2>
-      <h6>{new Date(time * 1000).toLocaleDateString("en-US")}</h6>
-      {title && <h4 className="font-bold">{title}</h4>}
-      {url && (
-        <a className="text-xs" href={url}>
-          {url}
-        </a>
-      )}
-      {text && <div>{Parser(text)}</div>}
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>name</TableHead>
+            <TableHead>description</TableHead>
+            <TableHead>섹터</TableHead>
+            <TableHead className="w-10">현재가격</TableHead>
+            <TableHead>거래량</TableHead>
+            <TableHead
+              className={`cursor-pointer ${
+                sortConfig === "minChange" ? "bg-red-300 text-white" : ""
+              }`}
+              onClick={() => setSortConfig("minChange")}
+            >
+              최소
+            </TableHead>
+            <TableHead
+              className={`cursor-pointer ${
+                sortConfig === "avgChange" ? "bg-red-300 text-white" : ""
+              }`}
+              onClick={() => setSortConfig("avgChange")}
+            >
+              평균
+            </TableHead>
+            <TableHead
+              className={`cursor-pointer ${
+                sortConfig === "maxChange" ? "bg-red-300 text-white" : ""
+              }`}
+              onClick={() => setSortConfig("maxChange")}
+            >
+              최대
+            </TableHead>
+            <TableHead
+              className={`cursor-pointer ${
+                sortConfig === "full_model_1h_prediction"
+                  ? "bg-red-300 text-white"
+                  : ""
+              }`}
+              onClick={() => setSortConfig("full_model_1h_prediction")}
+            >
+              1h
+            </TableHead>
+            <TableHead>2h</TableHead>
+            <TableHead>3h</TableHead>
+            <TableHead>4h</TableHead>
+            <TableHead>5h</TableHead>
+            <TableHead>6h</TableHead>
+            <TableHead>7h</TableHead>
+            <TableHead>8h</TableHead>
+            <TableHead>9h</TableHead>
+            <TableHead>10h</TableHead>
+            <TableHead>11h</TableHead>
+            <TableHead>12h</TableHead>
+            <TableHead>13h</TableHead>
+            <TableHead>14h</TableHead>
+            <TableHead>15h</TableHead>
+            <TableHead>16h</TableHead>
+            <TableHead>17h</TableHead>
+            <TableHead>18h</TableHead>
+            <TableHead>19h</TableHead>
+            <TableHead>20h</TableHead>
+            <TableHead>21h</TableHead>
+            <TableHead>22h</TableHead>
+            <TableHead>23h</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {sortedData.map((live) => (
+            <TableRow key={live.name}>
+              <TableCell>{live.name}</TableCell>
+              <TableCell
+                className="truncate max-w-[20ch]"
+                title={live.description}
+              >
+                {live.description}
+              </TableCell>
+              <TableCell className="truncate">{live.sector_tr}</TableCell>
+              <TableCell>{live.close}</TableCell>
+              <TableCell>{Number(live.volume).toLocaleString()}</TableCell>
+              <TableCell>{live.minChange}%</TableCell>
+              <TableCell>{live.avgChange}%</TableCell>
+              <TableCell>{live.maxChange}%</TableCell>
+              <TableCell>
+                {Number(live.full_model_1h_prediction)?.toFixed(2)}%
+              </TableCell>
+              <TableCell>
+                {Number(live.full_model_2h_prediction)?.toFixed(2)}%
+              </TableCell>
+              <TableCell>
+                {Number(live.full_model_3h_prediction)?.toFixed(2)}%
+              </TableCell>
+              <TableCell>
+                {Number(live.full_model_4h_prediction)?.toFixed(2)}%
+              </TableCell>
+              <TableCell>
+                {Number(live.full_model_5h_prediction)?.toFixed(2)}%
+              </TableCell>
+              <TableCell>
+                {Number(live.full_model_6h_prediction)?.toFixed(2)}%
+              </TableCell>
+              <TableCell>
+                {Number(live.full_model_7h_prediction)?.toFixed(2)}%
+              </TableCell>
+              <TableCell>
+                {Number(live.full_model_8h_prediction)?.toFixed(2)}%
+              </TableCell>
+              <TableCell>
+                {Number(live.full_model_9h_prediction)?.toFixed(2)}%
+              </TableCell>
+              <TableCell>
+                {Number(live.full_model_10h_prediction)?.toFixed(2)}%
+              </TableCell>
+              <TableCell>
+                {Number(live.full_model_11h_prediction)?.toFixed(2)}%
+              </TableCell>
+              <TableCell>
+                {Number(live.full_model_12h_prediction)?.toFixed(2)}%
+              </TableCell>
+              <TableCell>
+                {Number(live.full_model_13h_prediction)?.toFixed(2)}%
+              </TableCell>
+              <TableCell>
+                {Number(live.full_model_14h_prediction)?.toFixed(2)}%
+              </TableCell>
+              <TableCell>
+                {Number(live.full_model_15h_prediction)?.toFixed(2)}%
+              </TableCell>
+              <TableCell>
+                {Number(live.full_model_16h_prediction)?.toFixed(2)}%
+              </TableCell>
+              <TableCell>
+                {Number(live.full_model_17h_prediction)?.toFixed(2)}%
+              </TableCell>
+              <TableCell>
+                {Number(live.full_model_18h_prediction)?.toFixed(2)}%
+              </TableCell>
+              <TableCell>
+                {Number(live.full_model_19h_prediction)?.toFixed(2)}%
+              </TableCell>
+              <TableCell>
+                {Number(live.full_model_20h_prediction)?.toFixed(2)}%
+              </TableCell>
+              <TableCell>
+                {Number(live.full_model_21h_prediction)?.toFixed(2)}%
+              </TableCell>
+              <TableCell>
+                {Number(live.full_model_22h_prediction)?.toFixed(2)}%
+              </TableCell>
+              <TableCell>
+                {Number(live.full_model_23h_prediction)?.toFixed(2)}%
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+      {query.isLoading && <div>로딩 중...</div>}
+      {query.error && <div>에러 발생: {query.error.message}</div>}
     </>
-  );
-}
-
-export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Id />
-        <div>
-          <Suspense fallback={<h2>Loading...</h2>}>
-            <PostTitle />
-          </Suspense>
-        </div>
-        <Next />
-
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
   );
 }
