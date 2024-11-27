@@ -83,7 +83,7 @@ export default function Home() {
   return (
     <>
       <Table>
-        <TableHeader className="sticky top-0 bg-white z-50 shadow-md">
+        <TableHeader className="sticky top-0 bg-white z-50">
           <TableRow>
             <TableHead>logo</TableHead>
             <TableHead>name</TableHead>
@@ -148,6 +148,9 @@ export default function Home() {
             <TableHead>22h</TableHead>
             <TableHead>23h</TableHead>
           </TableRow>
+          <tr>
+            <th className="h-px p-0 bg-neutral-200" colSpan={32}></th>
+          </tr>
         </TableHeader>
         <TableBody>
           {sortedData.map((live) => (
