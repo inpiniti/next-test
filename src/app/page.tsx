@@ -148,9 +148,12 @@ export default function Home() {
             <TableHead>22h</TableHead>
             <TableHead>23h</TableHead>
           </TableRow>
-          <tr>
-            <th className="h-px p-0 bg-neutral-200" colSpan={32}></th>
-          </tr>
+          <TableRow>
+            <TableHead
+              className="h-px p-0 bg-neutral-200"
+              colSpan={32}
+            ></TableHead>
+          </TableRow>
         </TableHeader>
         <TableBody>
           {sortedData.map((live) => (
