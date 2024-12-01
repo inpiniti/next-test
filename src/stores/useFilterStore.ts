@@ -1,7 +1,8 @@
-import { create } from "zustand";
-import { devtools } from "zustand/middleware";
+import { create } from 'zustand';
+import { devtools } from 'zustand/middleware';
 
 export interface IFilter {
+  market: string;
   stock: string;
   sector: string;
   minVolume: number;
@@ -18,8 +19,9 @@ interface FilterStore {
 const useFilterStore = create<FilterStore>()(
   devtools((set) => ({
     filter: {
-      stock: "",
-      sector: "",
+      market: 'seoul',
+      stock: '',
+      sector: '',
       minVolume: 1000000,
       minGrowthRate: 30,
       avgGrowthRate: 50,

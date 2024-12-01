@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   Table,
   TableBody,
@@ -8,19 +8,19 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from '@/components/ui/table';
 
-import useLiveNasdaqQuery from "@/hooks/useLiveNasdaqQuery";
-import IStock from "@/interface/IStock";
-import useFilterStore from "@/stores/useFilterStore";
-import useLiveNasdaqStore from "@/stores/useLiveNasdaqStore";
-import { useMemo, useState } from "react";
+import useLiveNasdaqQuery from '@/hooks/useLiveNasdaqQuery';
+import IStock from '@/interface/IStock';
+import useFilterStore from '@/stores/useFilterStore';
+import useLiveNasdaqStore from '@/stores/useLiveNasdaqStore';
+import { useMemo, useState } from 'react';
 
 export default function Home() {
   const query = useLiveNasdaqQuery();
   const liveNasdaqList = useLiveNasdaqStore((state) => state.liveNasdaqList);
   const filter = useFilterStore((state) => state.filter);
-  const [sortConfig, setSortConfig] = useState<string | null>("minChange");
+  const [sortConfig, setSortConfig] = useState<string | null>('minChange');
 
   const sortedData = useMemo(() => {
     if (sortConfig !== null) {
@@ -29,39 +29,40 @@ export default function Home() {
       // filter.stock 으로 description 와 name 에서 like 필터
       // filter.stock 이 빈값이면 전체 데이터를 반환
       if (filter.stock) {
+        // 종목 명 검색시에는 다른 필터가 적용이 안되도록
         filteredData = filteredData.filter(
           (item) =>
             item.name.toLowerCase().includes(filter.stock.toLowerCase()) ||
             item.description?.toLowerCase().includes(filter.stock.toLowerCase())
         );
-      }
+      } else {
+        // // filter.sector 으로 sector_tr 에서 like 필터
+        if (filter.sector && filter.sector !== 'all') {
+          filteredData = filteredData.filter((item) =>
+            item.sector_tr?.toLowerCase().includes(filter.sector.toLowerCase())
+          );
+        }
 
-      // // filter.sector 으로 sector_tr 에서 like 필터
-      if (filter.sector && filter.sector !== "all") {
-        filteredData = filteredData.filter((item) =>
-          item.sector_tr?.toLowerCase().includes(filter.sector.toLowerCase())
-        );
-      }
+        // // filter.minVolume 으로 volume 보다 큰 거래량만 필터
+        if (filter.minVolume) {
+          filteredData = filteredData.filter(
+            (item) => Number(item.volume) >= filter.minVolume
+          );
+        }
 
-      // // filter.minVolume 으로 volume 보다 큰 거래량만 필터
-      if (filter.minVolume) {
-        filteredData = filteredData.filter(
-          (item) => Number(item.volume) >= filter.minVolume
-        );
-      }
+        // // filter.minGrowthRate 으로 minChange 보다 큰 값만 필터
+        if (filter.minGrowthRate) {
+          filteredData = filteredData.filter(
+            (item) => Number(item.minChange) >= filter.minGrowthRate
+          );
+        }
 
-      // // filter.minGrowthRate 으로 minChange 보다 큰 값만 필터
-      if (filter.minGrowthRate) {
-        filteredData = filteredData.filter(
-          (item) => Number(item.minChange) >= filter.minGrowthRate
-        );
-      }
-
-      // // filter.avgGrowthRate 으로 avgChange 보다 큰 값만 필터
-      if (filter.avgGrowthRate) {
-        filteredData = filteredData.filter(
-          (item) => Number(item.avgChange) >= filter.avgGrowthRate
-        );
+        // // filter.avgGrowthRate 으로 avgChange 보다 큰 값만 필터
+        if (filter.avgGrowthRate) {
+          filteredData = filteredData.filter(
+            (item) => Number(item.avgChange) >= filter.avgGrowthRate
+          );
+        }
       }
 
       return [...filteredData]
@@ -93,35 +94,35 @@ export default function Home() {
             <TableHead>거래량</TableHead>
             <TableHead
               className={`cursor-pointer ${
-                sortConfig === "minChange" ? "bg-red-300 text-white" : ""
+                sortConfig === 'minChange' ? 'bg-red-300 text-white' : ''
               }`}
-              onClick={() => setSortConfig("minChange")}
+              onClick={() => setSortConfig('minChange')}
             >
               최소
             </TableHead>
             <TableHead
               className={`cursor-pointer ${
-                sortConfig === "avgChange" ? "bg-red-300 text-white" : ""
+                sortConfig === 'avgChange' ? 'bg-red-300 text-white' : ''
               }`}
-              onClick={() => setSortConfig("avgChange")}
+              onClick={() => setSortConfig('avgChange')}
             >
               평균
             </TableHead>
             <TableHead
               className={`cursor-pointer ${
-                sortConfig === "maxChange" ? "bg-red-300 text-white" : ""
+                sortConfig === 'maxChange' ? 'bg-red-300 text-white' : ''
               }`}
-              onClick={() => setSortConfig("maxChange")}
+              onClick={() => setSortConfig('maxChange')}
             >
               최대
             </TableHead>
             <TableHead
               className={`cursor-pointer ${
-                sortConfig === "full_model_1h_prediction"
-                  ? "bg-red-300 text-white"
-                  : ""
+                sortConfig === 'full_model_1h_prediction'
+                  ? 'bg-red-300 text-white'
+                  : ''
               }`}
-              onClick={() => setSortConfig("full_model_1h_prediction")}
+              onClick={() => setSortConfig('full_model_1h_prediction')}
             >
               1h
             </TableHead>
@@ -180,10 +181,10 @@ export default function Home() {
               <TableCell
                 className={`${
                   Number(live.change) > 0
-                    ? "text-red-500"
+                    ? 'text-red-500'
                     : Number(live.change) < 0
-                    ? "text-blue-500"
-                    : ""
+                    ? 'text-blue-500'
+                    : ''
                 }`}
               >
                 {live.close}({Number(live.change).toFixed(2)}%)
