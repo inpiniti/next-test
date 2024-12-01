@@ -29,7 +29,6 @@ import {
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
 
-import { Input } from '@/components/ui/input';
 import NumberField from './NumberField';
 
 export default function LayoutSidebarFilter() {
