@@ -22,6 +22,14 @@ import IStock from '@/interface/IStock';
 import useFilterStore from '@/stores/useFilterStore';
 import useLiveNasdaqStore from '@/stores/useLiveMarketStore';
 import { useMemo, useState } from 'react';
+import { Title } from './components/title';
+import { AlertDialogDemo } from './components/alert-dialog-demo';
+import { CardDemo } from './components/card-demo';
+import { SheetDemo } from './components/sheet-demo';
+import { PopoverDemo } from './components/popover-demo';
+import { ToastDemo } from './components/toast-demo';
+import { TypographyDemo } from './components/typography-demo';
+import { Chart } from './components/chart';
 
 export default function Page() {
   const marketList = useLiveNasdaqStore((state) => state.marketList);
@@ -88,6 +96,14 @@ export default function Page() {
 
   return (
     <>
+      <Title />
+      <AlertDialogDemo />
+      <CardDemo />
+      <SheetDemo />
+      <PopoverDemo />
+      <ToastDemo />
+      <TypographyDemo />
+
       <Table>
         <TableHeader>
           <TableRow>

@@ -19,6 +19,7 @@ const geistMono = localFont({
 import { SidebarProvider } from '@/components/ui/sidebar';
 import LayoutHeader from './components/layoutHeader';
 import LayoutSidebar from './components/layoutSidebar';
+import LayoutDialog from './components/layoutDialog';
 
 export default function RootLayout({
   children,
@@ -45,6 +46,7 @@ export default function RootLayout({
             </div>
           </SidebarProvider>
         </QueryClientProvider>
+        <LayoutDialog />
       </body>
     </html>
   );

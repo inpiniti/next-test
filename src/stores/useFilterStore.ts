@@ -10,6 +10,7 @@ export interface IFilter {
   avgGrowthRate: number;
   displayItemCount: number;
   sortConfig: string;
+  isDialogOpen: boolean;
 }
 
 interface FilterStore {
@@ -28,6 +29,7 @@ const useFilterStore = create<FilterStore>()(
       avgGrowthRate: 50,
       displayItemCount: 100,
       sortConfig: 'full_model_1h_prediction',
+      isDialogOpen: false,
     },
     setFilter: (filter: IFilter) => set({ filter }),
   }))

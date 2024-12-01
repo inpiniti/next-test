@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import * as React from "react";
+import * as React from 'react';
 
-import { CardHeader } from "@/components/ui/card";
+import { CardHeader } from '@/components/ui/card';
 
 export function Chart({ stock }) {
   return (
@@ -29,9 +29,9 @@ export function Chart({ stock }) {
           </button>
         </div>
       </CardHeader>
-      {stock.chartData.map((data, index) => (
+      {/* {stock.chartData.map((data, index) => (
         <div key={index}>{data.change}</div>
-      ))}
+      ))} */}
     </>
   );
 }

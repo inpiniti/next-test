@@ -44,7 +44,7 @@ export const kosdaqLiveTable = pgTable('kosdaq_live', {
   // premarket_gap: numeric("premarket_gap"),
   // premarket_volume: numeric("premarket_volume"),
   // gap: numeric("gap"),
-  // volume_change: numeric("volume_change"),
+  volume_change: numeric('volume_change'),
   // postmarket_close: numeric("postmarket_close"),
   // postmarket_change: numeric("postmarket_change"),
   // postmarket_volume: numeric("postmarket_volume"),

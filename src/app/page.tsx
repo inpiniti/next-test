@@ -80,6 +80,11 @@ export default function Home() {
     return marketList;
   }, [marketList, filter]);
 
+  const rowClick = (name: string) => {
+    setMarketId(name);
+    setFilter({ ...filter, isDialogOpen: true });
+  };
+
   return (
     <>
       <Table>
@@ -176,7 +181,7 @@ export default function Home() {
                 marketName === live.name ? 'bg-gray-100' : ''
               }`}
               key={live.name}
-              onClick={() => setMarketId(live.name)}
+              onClick={() => rowClick(live.name)}
             >
               <TableCell>
                 <Avatar className="border">
@@ -208,7 +213,18 @@ export default function Home() {
               >
                 {live.close}({Number(live.change).toFixed(2)}%)
               </TableCell>
-              <TableCell>{Number(live.volume).toLocaleString()}</TableCell>
+              <TableCell
+                className={`${
+                  Number(live.volume_change) > 0
+                    ? 'text-red-500'
+                    : Number(live.volume_change) < 0
+                    ? 'text-blue-500'
+                    : ''
+                }`}
+              >
+                {Number(live.volume).toLocaleString()}(
+                {Number(live.volume_change).toFixed(2)}%)
+              </TableCell>
               <TableCell>{live.minChange}%</TableCell>
               <TableCell>{live.avgChange}%</TableCell>
               <TableCell>{live.maxChange}%</TableCell>
