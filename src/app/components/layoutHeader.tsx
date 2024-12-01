@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 
@@ -15,6 +16,9 @@ export default function LayoutHeader() {
         onChange={(e) => setFilter({ ...filter, stock: e.target.value })}
         placeholder="종목검색"
       />
+      <Button>전체</Button>
+      <Button variant="secondary">구매 목록 (미구현)</Button>
+      <Button variant="secondary">관심 종목 (미구현)</Button>
     </div>
   );
 }
