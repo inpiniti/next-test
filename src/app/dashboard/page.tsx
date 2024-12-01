@@ -29,7 +29,6 @@ import { SheetDemo } from './components/sheet-demo';
 import { PopoverDemo } from './components/popover-demo';
 import { ToastDemo } from './components/toast-demo';
 import { TypographyDemo } from './components/typography-demo';
-import { Chart } from './components/chart';
 
 export default function Page() {
   const marketList = useLiveNasdaqStore((state) => state.marketList);
