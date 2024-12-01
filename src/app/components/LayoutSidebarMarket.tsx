@@ -1,9 +1,4 @@
-import {
-  FaChartLine,
-  FaBuilding,
-  FaIndustry,
-  FaChartBar,
-} from 'react-icons/fa';
+import { FaBuilding, FaIndustry, FaChartBar } from 'react-icons/fa';
 
 import {
   SidebarMenu,
@@ -18,11 +13,9 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { ChevronsUpDown, Plus } from 'lucide-react';
+import { ChevronsUpDown } from 'lucide-react';
 import { useMemo } from 'react';
 
 export default function LayoutSidebarMarket() {
