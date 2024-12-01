@@ -243,7 +243,6 @@ export default function Page() {
           ))}
         </TableBody>
       </Table>
-      {query.isLoading && <div>로딩 중...</div>}
     </>
     // <div className="flex flex-1 flex-col gap-4 p-4">
     //   <Title />
