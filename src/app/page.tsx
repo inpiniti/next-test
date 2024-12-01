@@ -17,13 +17,13 @@ import { useMemo } from 'react';
 import { FaSort, FaSortDown } from 'react-icons/fa';
 
 export default function Home() {
-  const liveNasdaqList = useLiveMarketStore((state) => state.marketList);
+  const { marketName, marketList, setMarketId } = useLiveMarketStore();
   const { filter, setFilter } = useFilterStore();
   //const [sortConfig, setSortConfig] = useState<string | null>('minChange');
 
   const sortedData = useMemo(() => {
     if (filter.sortConfig !== null) {
-      let filteredData = liveNasdaqList;
+      let filteredData = marketList;
 
       // filter.stock 으로 description 와 name 에서 like 필터
       // filter.stock 이 빈값이면 전체 데이터를 반환
@@ -77,8 +77,8 @@ export default function Home() {
         })
         .slice(0, filter.displayItemCount); // 처음 100개 항목만 선택
     }
-    return liveNasdaqList;
-  }, [liveNasdaqList, filter]);
+    return marketList;
+  }, [marketList, filter]);
 
   return (
     <>
@@ -168,16 +168,16 @@ export default function Home() {
             <TableHead>22h</TableHead>
             <TableHead>23h</TableHead>
           </TableRow>
-          <TableRow>
-            <TableHead
-              className="h-px p-0 bg-neutral-200"
-              colSpan={32}
-            ></TableHead>
-          </TableRow>
         </TableHeader>
         <TableBody>
           {sortedData.map((live) => (
-            <TableRow key={live.name}>
+            <TableRow
+              className={`cursor-pointer ${
+                marketName === live.name ? 'bg-gray-100' : ''
+              }`}
+              key={live.name}
+              onClick={() => setMarketId(live.name)}
+            >
               <TableCell>
                 <Avatar className="border">
                   <AvatarImage
