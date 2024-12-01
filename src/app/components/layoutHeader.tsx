@@ -1,11 +1,9 @@
 import { Input } from '@/components/ui/input';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 
-import useLiveNasdaqQuery from '@/hooks/useLiveNasdaqQuery';
 import useFilterStore from '@/stores/useFilterStore';
 
 export default function LayoutHeader() {
-  const query = useLiveNasdaqQuery();
   const { filter, setFilter } = useFilterStore();
 
   return (
@@ -17,7 +15,6 @@ export default function LayoutHeader() {
         onChange={(e) => setFilter({ ...filter, stock: e.target.value })}
         placeholder="종목검색"
       />
-      {(query.isLoading || query.isFetching) && <div>로딩 중...</div>}
     </div>
   );
 }

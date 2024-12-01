@@ -4,10 +4,11 @@ import {
   FaArrowDown,
   FaEquals,
   FaList,
+  FaSort,
 } from 'react-icons/fa';
 
 import useFilterStore from '@/stores/useFilterStore';
-import useLiveNasdaqStore from '@/stores/useLiveNasdaqStore';
+import useLiveMarketStore from '@/stores/useLiveMarketStore';
 import { useMemo } from 'react';
 
 import {
@@ -29,17 +30,18 @@ import {
 } from '@/components/ui/sidebar';
 
 import { Input } from '@/components/ui/input';
+import NumberField from './NumberField';
 
 export default function LayoutSidebarFilter() {
   const filter = useFilterStore((state) => state.filter);
   const setFilter = useFilterStore((state) => state.setFilter);
 
-  const liveNasdaqList = useLiveNasdaqStore((state) => state.liveNasdaqList);
+  const marketList = useLiveMarketStore((state) => state.marketList);
   const uniqueSectors = useMemo(() => {
-    return Array.from(
-      new Set(liveNasdaqList.map((item) => item.sector_tr))
-    ).filter((sector): sector is string => sector !== undefined);
-  }, [liveNasdaqList]);
+    return Array.from(new Set(marketList.map((item) => item.sector_tr))).filter(
+      (sector): sector is string => sector !== undefined
+    );
+  }, [marketList]);
 
   return (
     <SidebarGroup>
@@ -81,15 +83,17 @@ export default function LayoutSidebarFilter() {
                 <FaChartBar className="mr-2" />
                 최소 거래량
               </div>
-              <Input
+              <NumberField
                 className="bg-white"
                 value={filter.minVolume}
                 onChange={(e) =>
                   setFilter({
                     ...filter,
-                    minVolume: Number(e.target.value),
+                    minVolume: Number(e),
                   })
                 }
+                min={0}
+                step={10000}
               />
             </div>
           </SidebarMenuItem>
@@ -99,15 +103,17 @@ export default function LayoutSidebarFilter() {
                 <FaArrowDown className="mr-2" />
                 최소 최소 상승가능성률
               </div>
-              <Input
+              <NumberField
                 className="bg-white"
                 value={filter.minGrowthRate}
                 onChange={(e) =>
                   setFilter({
                     ...filter,
-                    minGrowthRate: Number(e.target.value),
+                    minGrowthRate: Number(e),
                   })
                 }
+                min={0}
+                step={5}
               />
             </div>
           </SidebarMenuItem>
@@ -117,15 +123,17 @@ export default function LayoutSidebarFilter() {
                 <FaEquals className="mr-2" />
                 최소 평균 상승가능성률
               </div>
-              <Input
+              <NumberField
                 className="bg-white"
                 value={filter.avgGrowthRate}
                 onChange={(e) =>
                   setFilter({
                     ...filter,
-                    avgGrowthRate: Number(e.target.value),
+                    avgGrowthRate: Number(e),
                   })
                 }
+                min={0}
+                step={5}
               />
             </div>
           </SidebarMenuItem>
@@ -155,6 +163,36 @@ export default function LayoutSidebarFilter() {
                     <SelectItem value="100">100</SelectItem>
                     <SelectItem value="200">200</SelectItem>
                     <SelectItem value="300">300</SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
+          </SidebarMenuItem>
+          <SidebarMenuItem>
+            <div className="p-2 text-xs flex flex-col gap-1">
+              <div className="flex items-center">
+                <FaSort className="mr-2" />
+                정렬
+              </div>
+              <Select
+                value={filter.sortConfig.toString()}
+                onValueChange={(value) =>
+                  setFilter({
+                    ...filter,
+                    sortConfig: value,
+                  })
+                }
+              >
+                <SelectTrigger className="bg-white">
+                  <SelectValue placeholder="아이탬 수를 선택하세요." />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>정렬</SelectLabel>
+                    <SelectItem value="minChange">최소</SelectItem>
+                    <SelectItem value="avgChange">평균</SelectItem>
+                    <SelectItem value="maxChange">최대</SelectItem>
+                    <SelectItem value="full_model_1h_prediction">1h</SelectItem>
                   </SelectGroup>
                 </SelectContent>
               </Select>

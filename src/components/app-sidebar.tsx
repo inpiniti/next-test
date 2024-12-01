@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   Sidebar,
@@ -7,27 +7,25 @@ import {
   SidebarGroupContent,
   SidebarHeader,
   SidebarInput,
-} from "@/components/ui/sidebar";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
-import { Navigation } from "@/components/navigation";
-import AppSidebarItem from "@/components/app-sidebar-item";
+} from '@/components/ui/sidebar';
+import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
+import { Navigation } from '@/components/navigation';
+import AppSidebarItem from '@/components/app-sidebar-item';
 
-import React from "react";
+import React from 'react';
 
-import { navMain } from "@/data/navMain";
+import { navMain } from '@/data/navMain';
 //import { mails as _mails } from "@/data/mails";
 
-import IStock from "@/interface/IStock";
-import useLiveNasdaqQuery from "@/hooks/useLiveNasdaqQuery";
-import useLiveNasdaqStore from "@/stores/useLiveNasdaqStore";
+import IStock from '@/interface/IStock';
+import useLiveNasdaqStore from '@/stores/useLiveMarketStore';
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   // Note: I'm using state to show active item.
   // IRL you should use the url/router.
   const [activeItem] = React.useState(navMain[0]);
-  const query = useLiveNasdaqQuery();
-  const liveNasdaqList = useLiveNasdaqStore((state) => state.liveNasdaqList);
+  const marketList = useLiveNasdaqStore((state) => state.marketList);
   //const [mails] = React.useState(_mails);
 
   return (
@@ -60,9 +58,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarContent>
           <SidebarGroup className="px-0">
             <SidebarGroupContent>
-              {query.isLoading && <div>로딩 중...</div>}
-              {query.error && <div>에러 발생: {query.error.message}</div>}
-              {liveNasdaqList?.map((stock: IStock) => (
+              {marketList?.map((stock: IStock) => (
                 <AppSidebarItem key={stock.name} stock={stock} />
               ))}
             </SidebarGroupContent>

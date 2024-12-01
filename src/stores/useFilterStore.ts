@@ -9,6 +9,7 @@ export interface IFilter {
   minGrowthRate: number;
   avgGrowthRate: number;
   displayItemCount: number;
+  sortConfig: string;
 }
 
 interface FilterStore {
@@ -22,10 +23,11 @@ const useFilterStore = create<FilterStore>()(
       market: 'seoul',
       stock: '',
       sector: '',
-      minVolume: 1000000,
-      minGrowthRate: 30,
+      minVolume: 10000,
+      minGrowthRate: 10,
       avgGrowthRate: 50,
       displayItemCount: 100,
+      sortConfig: 'full_model_1h_prediction',
     },
     setFilter: (filter: IFilter) => set({ filter }),
   }))

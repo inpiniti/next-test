@@ -10,20 +10,19 @@ import {
   TableRow,
 } from '@/components/ui/table';
 
-import useLiveNasdaqQuery from '@/hooks/useLiveNasdaqQuery';
 import IStock from '@/interface/IStock';
 import useFilterStore from '@/stores/useFilterStore';
-import useLiveNasdaqStore from '@/stores/useLiveNasdaqStore';
-import { useMemo, useState } from 'react';
+import useLiveMarketStore from '@/stores/useLiveMarketStore';
+import { useMemo } from 'react';
+import { FaSort, FaSortDown } from 'react-icons/fa';
 
 export default function Home() {
-  const query = useLiveNasdaqQuery();
-  const liveNasdaqList = useLiveNasdaqStore((state) => state.liveNasdaqList);
-  const filter = useFilterStore((state) => state.filter);
-  const [sortConfig, setSortConfig] = useState<string | null>('minChange');
+  const liveNasdaqList = useLiveMarketStore((state) => state.marketList);
+  const { filter, setFilter } = useFilterStore();
+  //const [sortConfig, setSortConfig] = useState<string | null>('minChange');
 
   const sortedData = useMemo(() => {
-    if (sortConfig !== null) {
+    if (filter.sortConfig !== null) {
       let filteredData = liveNasdaqList;
 
       // filter.stock 으로 description 와 name 에서 like 필터
@@ -67,8 +66,8 @@ export default function Home() {
 
       return [...filteredData]
         .sort((a, b) => {
-          const aValue = Number(a[sortConfig as keyof IStock]);
-          const bValue = Number(b[sortConfig as keyof IStock]);
+          const aValue = Number(a[filter.sortConfig as keyof IStock]);
+          const bValue = Number(b[filter.sortConfig as keyof IStock]);
 
           if (aValue < bValue) {
             return 1;
@@ -79,7 +78,7 @@ export default function Home() {
         .slice(0, filter.displayItemCount); // 처음 100개 항목만 선택
     }
     return liveNasdaqList;
-  }, [liveNasdaqList, sortConfig, filter]);
+  }, [liveNasdaqList, filter]);
 
   return (
     <>
@@ -93,38 +92,58 @@ export default function Home() {
             <TableHead className="w-10">현재가격</TableHead>
             <TableHead>거래량</TableHead>
             <TableHead
-              className={`cursor-pointer ${
-                sortConfig === 'minChange' ? 'bg-red-300 text-white' : ''
-              }`}
-              onClick={() => setSortConfig('minChange')}
+              className="cursor-pointer"
+              onClick={() => setFilter({ ...filter, sortConfig: 'minChange' })}
             >
-              최소
+              <div className="flex items-center gap-2">
+                최소
+                {filter.sortConfig === 'minChange' ? (
+                  <FaSortDown />
+                ) : (
+                  <FaSort className="text-neutral-300" />
+                )}
+              </div>
             </TableHead>
             <TableHead
-              className={`cursor-pointer ${
-                sortConfig === 'avgChange' ? 'bg-red-300 text-white' : ''
-              }`}
-              onClick={() => setSortConfig('avgChange')}
+              className="cursor-pointer"
+              onClick={() => setFilter({ ...filter, sortConfig: 'avgChange' })}
             >
-              평균
+              <div className="flex items-center gap-2">
+                평균
+                {filter.sortConfig === 'avgChange' ? (
+                  <FaSortDown />
+                ) : (
+                  <FaSort className="text-neutral-300" />
+                )}
+              </div>
             </TableHead>
             <TableHead
-              className={`cursor-pointer ${
-                sortConfig === 'maxChange' ? 'bg-red-300 text-white' : ''
-              }`}
-              onClick={() => setSortConfig('maxChange')}
+              className="cursor-pointer"
+              onClick={() => setFilter({ ...filter, sortConfig: 'maxChange' })}
             >
-              최대
+              <div className="flex items-center gap-2">
+                최대
+                {filter.sortConfig === 'maxChange' ? (
+                  <FaSortDown />
+                ) : (
+                  <FaSort className="text-neutral-300" />
+                )}
+              </div>
             </TableHead>
             <TableHead
-              className={`cursor-pointer ${
-                sortConfig === 'full_model_1h_prediction'
-                  ? 'bg-red-300 text-white'
-                  : ''
-              }`}
-              onClick={() => setSortConfig('full_model_1h_prediction')}
+              className="cursor-pointer"
+              onClick={() =>
+                setFilter({ ...filter, sortConfig: 'full_model_1h_prediction' })
+              }
             >
-              1h
+              <div className="flex items-center gap-2">
+                1h
+                {filter.sortConfig === 'full_model_1h_prediction' ? (
+                  <FaSortDown />
+                ) : (
+                  <FaSort className="text-neutral-300" />
+                )}
+              </div>
             </TableHead>
             <TableHead>2h</TableHead>
             <TableHead>3h</TableHead>
@@ -266,8 +285,6 @@ export default function Home() {
           ))}
         </TableBody>
       </Table>
-      {query.isLoading && <div>로딩 중...</div>}
-      {query.error && <div>에러 발생: {query.error.message}</div>}
     </>
   );
 }

@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 // import { Title } from "./components/title";
 // import { AlertDialogDemo } from "./components/alert-dialog-demo";
@@ -16,23 +16,21 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from '@/components/ui/table';
 
-import useLiveNasdaqQuery from "@/hooks/useLiveNasdaqQuery";
-import IStock from "@/interface/IStock";
-import useFilterStore from "@/stores/useFilterStore";
-import useLiveNasdaqStore from "@/stores/useLiveNasdaqStore";
-import { useMemo, useState } from "react";
+import IStock from '@/interface/IStock';
+import useFilterStore from '@/stores/useFilterStore';
+import useLiveNasdaqStore from '@/stores/useLiveMarketStore';
+import { useMemo, useState } from 'react';
 
 export default function Page() {
-  const query = useLiveNasdaqQuery();
-  const liveNasdaqList = useLiveNasdaqStore((state) => state.liveNasdaqList);
+  const marketList = useLiveNasdaqStore((state) => state.marketList);
   const filter = useFilterStore((state) => state.filter);
-  const [sortConfig, setSortConfig] = useState<string | null>("minChange");
+  const [sortConfig, setSortConfig] = useState<string | null>('minChange');
 
   const sortedData = useMemo(() => {
     if (sortConfig !== null) {
-      let filteredData = liveNasdaqList;
+      let filteredData = marketList;
 
       // filter.stock 으로 description 와 name 에서 like 필터
       // filter.stock 이 빈값이면 전체 데이터를 반환
@@ -45,7 +43,7 @@ export default function Page() {
       }
 
       // // filter.sector 으로 sector_tr 에서 like 필터
-      if (filter.sector && filter.sector !== "all") {
+      if (filter.sector && filter.sector !== 'all') {
         filteredData = filteredData.filter((item) =>
           item.sector_tr?.toLowerCase().includes(filter.sector.toLowerCase())
         );
@@ -85,8 +83,8 @@ export default function Page() {
         })
         .slice(0, filter.displayItemCount); // 처음 100개 항목만 선택
     }
-    return liveNasdaqList;
-  }, [liveNasdaqList, sortConfig, filter]);
+    return marketList;
+  }, [marketList, sortConfig, filter]);
 
   return (
     <>
@@ -100,35 +98,35 @@ export default function Page() {
             <TableHead>거래량</TableHead>
             <TableHead
               className={`cursor-pointer ${
-                sortConfig === "minChange" ? "bg-red-300 text-white" : ""
+                sortConfig === 'minChange' ? 'bg-red-300 text-white' : ''
               }`}
-              onClick={() => setSortConfig("minChange")}
+              onClick={() => setSortConfig('minChange')}
             >
               최소
             </TableHead>
             <TableHead
               className={`cursor-pointer ${
-                sortConfig === "avgChange" ? "bg-red-300 text-white" : ""
+                sortConfig === 'avgChange' ? 'bg-red-300 text-white' : ''
               }`}
-              onClick={() => setSortConfig("avgChange")}
+              onClick={() => setSortConfig('avgChange')}
             >
               평균
             </TableHead>
             <TableHead
               className={`cursor-pointer ${
-                sortConfig === "maxChange" ? "bg-red-300 text-white" : ""
+                sortConfig === 'maxChange' ? 'bg-red-300 text-white' : ''
               }`}
-              onClick={() => setSortConfig("maxChange")}
+              onClick={() => setSortConfig('maxChange')}
             >
               최대
             </TableHead>
             <TableHead
               className={`cursor-pointer ${
-                sortConfig === "full_model_1h_prediction"
-                  ? "bg-red-300 text-white"
-                  : ""
+                sortConfig === 'full_model_1h_prediction'
+                  ? 'bg-red-300 text-white'
+                  : ''
               }`}
-              onClick={() => setSortConfig("full_model_1h_prediction")}
+              onClick={() => setSortConfig('full_model_1h_prediction')}
             >
               1h
             </TableHead>
@@ -246,7 +244,6 @@ export default function Page() {
         </TableBody>
       </Table>
       {query.isLoading && <div>로딩 중...</div>}
-      {query.error && <div>에러 발생: {query.error.message}</div>}
     </>
     // <div className="flex flex-1 flex-col gap-4 p-4">
     //   <Title />

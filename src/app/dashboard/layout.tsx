@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { Input } from "@/components/ui/input";
+import { Input } from '@/components/ui/input';
 import {
   Select,
   SelectContent,
@@ -9,7 +9,7 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from '@/components/ui/select';
 import {
   Sidebar,
   SidebarContent,
@@ -23,27 +23,25 @@ import {
   SidebarMenuItem,
   SidebarProvider,
   SidebarTrigger,
-} from "@/components/ui/sidebar";
-import useLiveNasdaqQuery from "@/hooks/useLiveNasdaqQuery";
-import useFilterStore from "@/stores/useFilterStore";
-import useLiveNasdaqStore from "@/stores/useLiveNasdaqStore";
-import { useMemo } from "react";
+} from '@/components/ui/sidebar';
+import useFilterStore from '@/stores/useFilterStore';
+import useLiveNasdaqStore from '@/stores/useLiveMarketStore';
+import { useMemo } from 'react';
 
 export default function DashboardLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const query = useLiveNasdaqQuery();
   const filter = useFilterStore((state) => state.filter);
   const setFilter = useFilterStore((state) => state.setFilter);
-  const liveNasdaqList = useLiveNasdaqStore((state) => state.liveNasdaqList);
+  const marketList = useLiveNasdaqStore((state) => state.marketList);
 
   const uniqueSectors = useMemo(() => {
-    return Array.from(
-      new Set(liveNasdaqList.map((item) => item.sector_tr))
-    ).filter((sector): sector is string => sector !== undefined);
-  }, [liveNasdaqList]);
+    return Array.from(new Set(marketList.map((item) => item.sector_tr))).filter(
+      (sector): sector is string => sector !== undefined
+    );
+  }, [marketList]);
 
   return (
     <SidebarProvider>
@@ -210,7 +208,6 @@ export default function DashboardLayout({
           <SidebarTrigger />
           header
           <Input type="email" placeholder="종목검색" className="w-fit" />
-          {(query.isLoading || query.isFetching) && <div>로딩 중...</div>}
         </div>
         <div className="grow-1 h-full overflow-scroll">{children}</div>
       </div>

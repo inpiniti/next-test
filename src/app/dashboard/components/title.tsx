@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import useLiveNasdaqStore from "@/stores/useLiveNasdaqStore";
+import useLiveNasdaqStore from '@/stores/useLiveMarketStore';
 
 export function Title() {
-  const liveNasdaq = useLiveNasdaqStore((state) => state.getLiveNasdaq());
+  const market = useLiveNasdaqStore((state) => state.getMarket());
   return (
     <div className="flex gap-2 items-center">
       <div className="w-10 h-10 bg-red-700 rounded"></div>
       <div>
         <div className="flex gap-2">
-          <div className="font-bold">SK하이닉스{liveNasdaq?.name}</div>
+          <div className="font-bold">SK하이닉스{market?.name}</div>
           <div className="text-neutral-400">000660</div>
         </div>
         <div className="flex gap-2 items-center">

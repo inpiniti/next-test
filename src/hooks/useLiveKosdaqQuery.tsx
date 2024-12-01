@@ -1,24 +1,24 @@
 import { useQuery } from '@tanstack/react-query';
-import { fetchLiveNasdaq } from '@/fetch/fetchLiveNasdaq';
+import { fetchLiveKosdaq } from '@/fetch/fetchLiveKosdaq';
 import useLiveMarketStore from '@/stores/useLiveMarketStore';
 import { useEffect, useState } from 'react';
 import IStock from '@/interface/IStock';
 import useFilterStore from '@/stores/useFilterStore';
 
-const useLiveNasdaqQuery = () => {
+const useLiveKosdaqQuery = () => {
   const { filter } = useFilterStore();
   const setMarketList = useLiveMarketStore((state) => state.setMarketList);
   const [isFetchingEnabled, setIsFetchingEnabled] = useState(false);
 
   const query = useQuery({
-    queryKey: ['useLiveNasdaq'],
-    queryFn: fetchLiveNasdaq,
+    queryKey: ['useLiveKosdaq'],
+    queryFn: fetchLiveKosdaq,
     refetchInterval: 60000, // 1분마다 패칭
     enabled: isFetchingEnabled, // 패칭 활성화/비활성화
   });
 
   useEffect(() => {
-    if (query.data && filter.market === 'nasdaq') {
+    if (query.data && filter.market === 'kosdaq') {
       const updatedData = query.data.map((stock: IStock) => {
         const chartData = Array.from({ length: 23 }, (_, index) => {
           const hour = index + 1;
@@ -59,4 +59,4 @@ const useLiveNasdaqQuery = () => {
   return { query, toggleFetching };
 };
 
-export default useLiveNasdaqQuery;
+export default useLiveKosdaqQuery;

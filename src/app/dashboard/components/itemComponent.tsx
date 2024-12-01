@@ -1,23 +1,23 @@
 // FILE: app-sidebar-item.tsx
-import React from "react";
-import IStock from "@/interface/IStock";
-import { formatDistanceToNow } from "date-fns";
-import { ko } from "date-fns/locale";
-import useLiveNasdaqStore from "@/stores/useLiveNasdaqStore";
+import React from 'react';
+import IStock from '@/interface/IStock';
+import { formatDistanceToNow } from 'date-fns';
+import { ko } from 'date-fns/locale';
+import useLiveNasdaqStore from '@/stores/useLiveMarketStore';
 
 // import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
-import { Chart } from "./chart";
+import { Chart } from './chart';
 
 const ItemComponent = ({ stock }: { stock: IStock }) => {
-  const setLiveNasdaqId = useLiveNasdaqStore((state) => state.setLiveNasdaqId);
-  const liveNasdaqName = useLiveNasdaqStore((state) => state.liveNasdaqName);
-  const isActive = stock.name === liveNasdaqName;
+  const setMarketId = useLiveNasdaqStore((state) => state.setMarketId);
+  const marketName = useLiveNasdaqStore((state) => state.marketName);
+  const isActive = stock.name === marketName;
 
   const changeColor =
-    stock.change && stock.change > 0 ? "text-red-500" : "text-blue-500";
+    stock.change && stock.change > 0 ? 'text-red-500' : 'text-blue-500';
   const formattedChange =
-    stock.change !== undefined ? Number(stock.change).toFixed(2) : "N/A";
+    stock.change !== undefined ? Number(stock.change).toFixed(2) : 'N/A';
   const relativeTime = formatDistanceToNow(new Date(stock.created_at), {
     addSuffix: true,
     locale: ko,
@@ -29,10 +29,10 @@ const ItemComponent = ({ stock }: { stock: IStock }) => {
       key={stock.name}
       className={`flex items-center p-4 gap-2 border-b ${
         isActive
-          ? "bg-black text-white hover:bg-black hover:text-white"
-          : "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+          ? 'bg-black text-white hover:bg-black hover:text-white'
+          : 'hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'
       }`}
-      onClick={() => setLiveNasdaqId(stock.name)}
+      onClick={() => setMarketId(stock.name)}
     >
       <div className="flex w-full flex-col items-start gap-2 whitespace-nowrap border-b text-sm leading-tight last:border-b-0">
         <div className="flex w-full items-center gap-2 justify-between">
