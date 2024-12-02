@@ -7,6 +7,9 @@ export const useAuth = () => {
   const login = async () => {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'kakao',
+      options: {
+        redirectTo: 'http://localhost:3000',
+      },
     });
     if (error) {
       console.error('error', error, '카카오 로그인에 실패하였습니다.');
@@ -16,5 +19,15 @@ export const useAuth = () => {
         .setUser((await supabase.auth.getUser()).data.user);
     }
   };
-  return { login };
+
+  const logout = async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      console.error('로그아웃 실패', error);
+    } else {
+      useAuthStore.getState().setUser(null);
+    }
+  };
+
+  return { login, logout };
 };
