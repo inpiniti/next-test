@@ -31,7 +31,31 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        <title>stock potatomap - AI 변동율 예측</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta
+          name="description"
+          content="AI를 사용하여 1시간 뒤부터 1년까지의 변동율을 예측하고, 소팅 및 다양한 필터를 통해 데이터를 분석할 수 있는 사이트입니다."
+        />
+        <meta
+          name="keywords"
+          content="AI, 변동율 예측, 주식, 소팅, 필터, 데이터 분석"
+        />
+        <meta name="author" content="ykjung" />
+        <meta property="og:title" content="Stock Potatomap - AI 변동율 예측" />
+        <meta
+          property="og:description"
+          content="AI를 사용하여 1시간 뒤부터 1년까지의 변동율을 예측하고, 소팅 및 다양한 필터를 통해 데이터를 분석할 수 있는 사이트입니다."
+        />
+        <meta
+          property="og:image"
+          content="https://images.unsplash.com/photo-1621264437251-59d700cfb327?q=80&w=2072&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        />
+        <meta property="og:url" content="https://stock.potatomap.com/" />
+        <meta
+          name="twitter:card"
+          content="https://images.unsplash.com/photo-1621264437251-59d700cfb327?q=80&w=2072&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        />
         {/* 기타 head 요소 */}
       </head>
       <body
