@@ -20,6 +20,7 @@ import { SidebarProvider } from '@/components/ui/sidebar';
 import LayoutHeader from './components/layoutHeader';
 import LayoutSidebar from './components/layoutSidebar';
 import LayoutDialog from './components/layoutDialog';
+import { LayoutASidebar } from './components/layoutASidebar';
 
 export default function RootLayout({
   children,
@@ -68,6 +69,7 @@ export default function RootLayout({
               <LayoutHeader />
               <div className="grow-1 h-full overflow-scroll">{children}</div>
             </div>
+            <LayoutASidebar />
           </SidebarProvider>
         </QueryClientProvider>
         <LayoutDialog />
