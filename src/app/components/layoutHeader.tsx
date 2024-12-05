@@ -1,3 +1,4 @@
+import { SettingsDialog } from '@/components/setting-dialog';
 import { Input } from '@/components/ui/input';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -31,6 +32,7 @@ export default function LayoutHeader() {
           <TabsTrigger value="password4">테스트</TabsTrigger>
         </TabsList>
       </Tabs>
+      <SettingsDialog />
     </div>
   );
 }
