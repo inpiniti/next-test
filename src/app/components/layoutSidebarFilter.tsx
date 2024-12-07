@@ -77,7 +77,7 @@ export default function LayoutSidebarFilter() {
             </div>
           </SidebarMenuItem>
           <SidebarMenuItem>
-            <div className="p-2 text-xs  flex flex-col gap-1">
+            <div className="p-2 text-xs flex flex-col gap-1">
               <div className="flex items-center">
                 <FaChartBar className="mr-2" />
                 최소 거래량
@@ -85,14 +85,36 @@ export default function LayoutSidebarFilter() {
               <NumberField
                 className="bg-white"
                 value={filter.minVolume}
-                onChange={(e) =>
-                  setFilter({
-                    ...filter,
-                    minVolume: Number(e),
-                  })
-                }
+                onChange={(e) => {
+                  const newValue = Number(e);
+                  const oldValue = filter.minVolume;
+
+                  if (newValue == 0 && oldValue > 10000) {
+                    setFilter({
+                      ...filter,
+                      minVolume: oldValue * 0.9,
+                    });
+                  } else {
+                    setFilter({
+                      ...filter,
+                      minVolume: Number(e),
+                    });
+                  }
+                }}
                 min={0}
-                step={10000}
+                step={
+                  filter.minVolume >= 1000000000
+                    ? 1000000000
+                    : filter.minVolume >= 100000000
+                    ? 100000000
+                    : filter.minVolume >= 10000000
+                    ? 10000000
+                    : filter.minVolume >= 1000000
+                    ? 1000000
+                    : filter.minVolume >= 100000
+                    ? 100000
+                    : 10000
+                }
               />
             </div>
           </SidebarMenuItem>

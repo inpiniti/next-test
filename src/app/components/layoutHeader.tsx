@@ -11,7 +11,7 @@ export default function LayoutHeader() {
   const { filter, setFilter } = useFilterStore();
 
   return (
-    <div className="shrink-0 p-2 flex items-center justify-between h-16">
+    <div className="shrink-0 p-2 flex items-center justify-between h-16 bg-neutral-50">
       <div className="flex items-center gap-2">
         <SidebarTrigger />
         <Input
