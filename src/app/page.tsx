@@ -87,7 +87,7 @@ export default function Home() {
 
   return (
     <>
-      <Table>
+      <Table className="bg-white border-spacing-0 border-separate">
         <TableHeader className="sticky top-0 bg-white z-50">
           <TableRow>
             <TableHead>logo</TableHead>

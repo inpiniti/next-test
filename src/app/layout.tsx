@@ -69,15 +69,15 @@ export default function RootLayout({
         <QueryClientProvider client={queryClient}>
           <SidebarProvider>
             <LayoutSidebar />
-            <div className="w-full h-svh flex flex-col divide-y overflow-hidden">
+            <div className="w-full h-svh flex flex-col divide-y overflow-hidden bg-neutral-50">
               <LayoutHeader />
               <div className="grow-1 h-full flex overflow-hidden divide-x">
-                <ScrollArea>
+                <ScrollArea className="bg-neutral-100">
                   {children}
                   <ScrollBar orientation="horizontal" />
                 </ScrollArea>
                 {filter.asideOpen && (
-                  <div className="h-full bg-neutral-50">
+                  <div className="h-full">
                     <LayoutASidebar />
                   </div>
                 )}
