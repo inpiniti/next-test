@@ -22,12 +22,15 @@ import LayoutSidebar from './components/layoutSidebar';
 import LayoutDialog from './components/layoutDialog';
 import { LayoutASidebar } from './components/layoutASidebar';
 
+import useFilterStore from '@/stores/useFilterStore';
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   const queryClient = new QueryClient();
+  const { filter } = useFilterStore();
 
   return (
     <html lang="en">
@@ -67,9 +70,15 @@ export default function RootLayout({
             <LayoutSidebar />
             <div className="w-full h-svh flex flex-col divide-y overflow-hidden">
               <LayoutHeader />
-              <div className="grow-1 h-full overflow-scroll">{children}</div>
+              <div className="grow-1 h-full flex overflow-hidden">
+                <div className="overflow-scroll">{children}</div>
+                {filter.asideOpen && (
+                  <div className="h-full bg-neutral-50">
+                    <LayoutASidebar />
+                  </div>
+                )}
+              </div>
             </div>
-            <LayoutASidebar />
           </SidebarProvider>
         </QueryClientProvider>
         <LayoutDialog />

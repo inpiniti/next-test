@@ -11,6 +11,7 @@ export interface IFilter {
   displayItemCount: number;
   sortConfig: string;
   isDialogOpen: boolean;
+  asideOpen?: boolean;
 }
 
 interface FilterStore {
@@ -30,6 +31,7 @@ const useFilterStore = create<FilterStore>()(
       displayItemCount: 100,
       sortConfig: 'full_model_1h_prediction',
       isDialogOpen: false,
+      asideOpen: true,
     },
     setFilter: (filter: IFilter) => set({ filter }),
   }))
