@@ -1,13 +1,12 @@
-import { useTheme } from "next-themes";
-import { SettingsDialog } from "@/components/setting-dialog";
-import ThemeToggle from "@/components/ThemeToggle";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { SidebarTrigger } from "@/components/ui/sidebar";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { SettingsDialog } from '@/components/setting-dialog';
+import ThemeToggle from '@/components/ThemeToggle';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { SidebarTrigger } from '@/components/ui/sidebar';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
-import useFilterStore from "@/stores/useFilterStore";
-import { FaBookmark, FaRegBookmark } from "react-icons/fa";
+import useFilterStore from '@/stores/useFilterStore';
+import { FaBookmark, FaRegBookmark } from 'react-icons/fa';
 
 export default function LayoutHeader() {
   const { filter, setFilter } = useFilterStore();
