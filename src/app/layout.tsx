@@ -1,6 +1,5 @@
 'use client';
 
-import { useTheme } from 'next-themes';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import localFont from 'next/font/local';
