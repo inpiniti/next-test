@@ -1,11 +1,13 @@
-import { SettingsDialog } from '@/components/setting-dialog';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { SidebarTrigger } from '@/components/ui/sidebar';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useTheme } from "next-themes";
+import { SettingsDialog } from "@/components/setting-dialog";
+import ThemeToggle from "@/components/ThemeToggle";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { SidebarTrigger } from "@/components/ui/sidebar";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-import useFilterStore from '@/stores/useFilterStore';
-import { FaBookmark, FaRegBookmark } from 'react-icons/fa';
+import useFilterStore from "@/stores/useFilterStore";
+import { FaBookmark, FaRegBookmark } from "react-icons/fa";
 
 export default function LayoutHeader() {
   const { filter, setFilter } = useFilterStore();
@@ -15,7 +17,7 @@ export default function LayoutHeader() {
       <div className="flex items-center gap-2">
         <SidebarTrigger />
         <Input
-          className="bg-white w-fit"
+          className={`w-fit`}
           value={filter.stock}
           onChange={(e) => setFilter({ ...filter, stock: e.target.value })}
           placeholder="종목검색"
@@ -41,15 +43,18 @@ export default function LayoutHeader() {
           <SettingsDialog />
         </div>
       </div>
-      <Button
-        size="sm"
-        variant="ghost"
-        onClick={() => {
-          setFilter({ ...filter, asideOpen: !filter.asideOpen });
-        }}
-      >
-        {filter.asideOpen ? <FaBookmark /> : <FaRegBookmark />}
-      </Button>
+      <div>
+        <ThemeToggle />
+        <Button
+          size="sm"
+          variant="ghost"
+          onClick={() => {
+            setFilter({ ...filter, asideOpen: !filter.asideOpen });
+          }}
+        >
+          {filter.asideOpen ? <FaBookmark /> : <FaRegBookmark />}
+        </Button>
+      </div>
     </div>
   );
 }

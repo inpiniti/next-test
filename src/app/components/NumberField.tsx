@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import React, { useState } from "react";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 interface NumberFieldProps {
   value: number;
@@ -35,11 +35,11 @@ const NumberField: React.FC<NumberFieldProps> = ({
   return (
     <div
       className={`flex justify-between items-center ${className} border rounded-md h-9 shadow-sm px-1 ${
-        isFocused ? 'ring-1 ring-neutral-700' : ''
+        isFocused ? "ring-1 ring-neutral-700" : ""
       }`}
     >
       <div
-        className="p-2 cursor-pointer hover:bg-neutral-100 rounded"
+        className="p-2 cursor-pointer bg-transparent hover:bg-input rounded"
         onClick={decrement}
       >
         <FaChevronLeft />
@@ -50,12 +50,12 @@ const NumberField: React.FC<NumberFieldProps> = ({
         min={min}
         max={max}
         step={step}
-        className="text-center bg-white border-0 text-sm w-full h-full outline-none"
+        className="text-center border-0 text-sm w-full h-full outline-none bg-transparent"
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
       />
       <div
-        className="p-2 cursor-pointer hover:bg-neutral-100 rounded"
+        className="p-2 cursor-pointer bg-transparent hover:bg-input rounded"
         onClick={increment}
       >
         <FaChevronRight />

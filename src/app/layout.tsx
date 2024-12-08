@@ -1,5 +1,6 @@
 'use client';
 
+import { useTheme } from 'next-themes';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import localFont from 'next/font/local';
@@ -24,6 +25,7 @@ import { LayoutASidebar } from './components/layoutASidebar';
 
 import useFilterStore from '@/stores/useFilterStore';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
+import { ThemeProvider } from '@/components/theme-provider';
 
 export default function RootLayout({
   children,
@@ -66,26 +68,35 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <QueryClientProvider client={queryClient}>
-          <SidebarProvider>
-            <LayoutSidebar />
-            <div className="w-full h-svh flex flex-col divide-y overflow-hidden bg-neutral-50">
-              <LayoutHeader />
-              <div className="grow-1 h-full flex overflow-hidden divide-x">
-                <ScrollArea className="bg-neutral-100">
-                  {children}
-                  <ScrollBar orientation="horizontal" />
-                </ScrollArea>
-                {filter.asideOpen && (
-                  <div className="h-full">
-                    <LayoutASidebar />
-                  </div>
-                )}
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <QueryClientProvider client={queryClient}>
+            <SidebarProvider>
+              <LayoutSidebar />
+              <div
+                className={`w-full h-svh flex flex-col divide-y overflow-hidden bg-sidebar`}
+              >
+                <LayoutHeader />
+                <div className="grow-1 h-full flex overflow-hidden divide-x">
+                  <ScrollArea>
+                    {children}
+                    <ScrollBar orientation="horizontal" />
+                  </ScrollArea>
+                  {filter.asideOpen && (
+                    <div className="h-full">
+                      <LayoutASidebar />
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
-          </SidebarProvider>
-          <LayoutDialog />
-        </QueryClientProvider>
+            </SidebarProvider>
+            <LayoutDialog />
+          </QueryClientProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

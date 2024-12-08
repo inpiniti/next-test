@@ -5,11 +5,11 @@ import {
   FaEquals,
   FaList,
   FaSort,
-} from 'react-icons/fa';
+} from "react-icons/fa";
 
-import useFilterStore from '@/stores/useFilterStore';
-import useLiveMarketStore from '@/stores/useLiveMarketStore';
-import { useMemo } from 'react';
+import useFilterStore from "@/stores/useFilterStore";
+import useLiveMarketStore from "@/stores/useLiveMarketStore";
+import { useMemo } from "react";
 
 import {
   Select,
@@ -19,7 +19,7 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
+} from "@/components/ui/select";
 
 import {
   SidebarGroup,
@@ -27,9 +27,9 @@ import {
   SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuItem,
-} from '@/components/ui/sidebar';
+} from "@/components/ui/sidebar";
 
-import NumberField from './NumberField';
+import NumberField from "./NumberField";
 
 export default function LayoutSidebarFilter() {
   const filter = useFilterStore((state) => state.filter);
@@ -59,7 +59,7 @@ export default function LayoutSidebarFilter() {
                   setFilter({ ...filter, sector: value })
                 }
               >
-                <SelectTrigger className="bg-white">
+                <SelectTrigger>
                   <SelectValue placeholder="색터 필터를 선택하세요." />
                 </SelectTrigger>
                 <SelectContent>
@@ -83,7 +83,6 @@ export default function LayoutSidebarFilter() {
                 최소 거래량
               </div>
               <NumberField
-                className="bg-white"
                 value={filter.minVolume}
                 onChange={(e) => {
                   const newValue = Number(e);
@@ -125,7 +124,6 @@ export default function LayoutSidebarFilter() {
                 최소 최소 상승가능성률
               </div>
               <NumberField
-                className="bg-white"
                 value={filter.minGrowthRate}
                 onChange={(e) =>
                   setFilter({
@@ -145,7 +143,6 @@ export default function LayoutSidebarFilter() {
                 최소 평균 상승가능성률
               </div>
               <NumberField
-                className="bg-white"
                 value={filter.avgGrowthRate}
                 onChange={(e) =>
                   setFilter({
@@ -173,7 +170,7 @@ export default function LayoutSidebarFilter() {
                   })
                 }
               >
-                <SelectTrigger className="bg-white">
+                <SelectTrigger>
                   <SelectValue placeholder="아이탬 수를 선택하세요." />
                 </SelectTrigger>
                 <SelectContent>
@@ -204,7 +201,7 @@ export default function LayoutSidebarFilter() {
                   })
                 }
               >
-                <SelectTrigger className="bg-white">
+                <SelectTrigger>
                   <SelectValue placeholder="아이탬 수를 선택하세요." />
                 </SelectTrigger>
                 <SelectContent>
