@@ -2,7 +2,10 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardDescription, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useState } from 'react';
+import { fetchBuy } from '@/fetch/fetchBuy';
+import { useGetBuyQuery } from '@/query/buy/useGetBuyQuery';
+import { useAuthStore } from '@/stores/useAuthStore';
+import { useEffect, useState } from 'react';
 
 export const LayoutASidebar = () => {
   const [live] = useState({
@@ -10,17 +13,36 @@ export const LayoutASidebar = () => {
     description: '삼성전자보통주',
   });
 
+  // 유저 정보
+  const { user } = useAuthStore();
+
+  // 쿼리
+  const { data, refetch } = useGetBuyQuery({
+    id: user?.id,
+  });
+
+  useEffect(() => {
+    console.log(1);
+    refetch();
+    console.log(2);
+
+    fetchBuy.get({ id: user?.id });
+  }, [refetch]);
+
   return (
     <aside className="flex flex-col h-full overflow-hidden divide-y">
       <Tabs defaultValue="account" className="shrink-0 p-2">
         <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="account">구매목록</TabsTrigger>
+          <TabsTrigger value="account" onClick={() => refetch()}>
+            구매목록
+          </TabsTrigger>
           <TabsTrigger value="password">관심종목</TabsTrigger>
         </TabsList>
       </Tabs>
       <ScrollArea className="h-full">
         <div className="gap-2 flex flex-col p-2">
-          {Array.from({ length: 100 }).map((_, index) => (
+          data : {JSON.stringify(data)} : data
+          {data?.map((_, index) => (
             <Card key={index} className="w-[360px] p-2 flex flex-col gap-1">
               <div className="flex gap-2 justify-between items-center">
                 <div className="flex flex-col gap-2">

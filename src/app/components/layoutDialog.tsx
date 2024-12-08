@@ -1,11 +1,3 @@
-import {
-  AlertDialog,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import IStock from '@/interface/IStock';
 import useFilterStore from '@/stores/useFilterStore';
@@ -14,13 +6,22 @@ import { useEffect, useState } from 'react';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Dialog, DialogContent, DialogFooter } from '@/components/ui/dialog';
+import NumberField from './NumberField';
+import { usePostBuyMutation } from '@/query/buy/usePostBuyMutation';
+import { useAuthStore } from '@/stores/useAuthStore';
+import { DialogTitle } from '@radix-ui/react-dialog';
 
 export default function LayoutDialog() {
   const { filter, setFilter } = useFilterStore();
   const { getMarket, marketName } = useLiveMarketStore();
-  const [selectedStock, setSelectedStock] = useState<IStock | undefined>();
+  const [selectedStock, setSelectedStock] = useState<IStock>();
 
-  const [value, setValue] = useState(0);
+  // 뮤테이션
+  const { isPending, mutate } = usePostBuyMutation();
+
+  // 유저 정보
+  const { user } = useAuthStore();
 
   useEffect(() => {
     setSelectedStock(getMarket());
@@ -32,15 +33,26 @@ export default function LayoutDialog() {
     setFilter({ ...filter, isDialogOpen: isOpen });
   };
 
+  // 구매수량
+  const [number, setNumber] = useState(0);
+  // 구매가격
+  const [price, setPrice] = useState(0);
+
+  // 구매하기
+  const handleBuy = () => {
+    if (selectedStock)
+      mutate({
+        id: user.id,
+        name: selectedStock.name,
+        number,
+        price,
+      });
+  };
+
   return (
-    <AlertDialog open={filter.isDialogOpen} onOpenChange={handleOpenChange}>
-      <AlertDialogContent className="w-full">
-        <AlertDialogHeader>
-          <AlertDialogTitle>주문하기</AlertDialogTitle>
-          <AlertDialogDescription>
-            실제 주문이 아니라, 가상으로 구매한 주식을 기록하는 용도입니다.
-          </AlertDialogDescription>
-        </AlertDialogHeader>
+    <Dialog open={filter.isDialogOpen} onOpenChange={handleOpenChange}>
+      <DialogContent className="w-full">
+        <DialogTitle>구매하기</DialogTitle> {/* DialogTitle 추가 */}
         <div className="flex items-center gap-2">
           <Avatar className="border">
             <AvatarImage
@@ -76,31 +88,72 @@ export default function LayoutDialog() {
         <form>
           <div className="grid w-full items-center gap-4">
             <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="name">구매가능금액</Label>
-              <Input id="name" placeholder="Name of your project" />
+              <Label htmlFor="name">구매수량</Label>
+              <NumberField
+                className="bg-white"
+                value={number}
+                onChange={(e) => {
+                  const newValue = Number(e);
+                  const oldValue = number;
+
+                  if (newValue == 0 && oldValue > 10) {
+                    setNumber(oldValue * 0.9);
+                  } else {
+                    setNumber(Number(e));
+                  }
+                }}
+                min={0}
+                step={
+                  number >= 1000000000
+                    ? 1000000000
+                    : number >= 100000000
+                    ? 100000000
+                    : number >= 10000000
+                    ? 10000000
+                    : number >= 1000000
+                    ? 1000000
+                    : number >= 100000
+                    ? 100000
+                    : number >= 10000
+                    ? 10000
+                    : number >= 1000
+                    ? 1000
+                    : number >= 100
+                    ? 100
+                    : number >= 10
+                    ? 10
+                    : 1
+                }
+              />
             </div>
             <div className="flex flex-col space-y-1.5">
               <Label htmlFor="framework">구매가격</Label>
               <Input
-                value={value}
-                onChange={(e) => setValue(Number(e.target.value))}
+                value={price}
+                onChange={(e) => setPrice(Number(e.target.value))}
               />
             </div>
           </div>
         </form>
-        <AlertDialogFooter>
+        <DialogFooter>
           <Button
             variant="outline"
             onClick={() => setFilter({ ...filter, isDialogOpen: false })}
           >
-            close
+            취소
           </Button>
-          <Button onClick={() => setFilter({ ...filter, isDialogOpen: false })}>
-            save
-          </Button>
-        </AlertDialogFooter>
+          {user?.id ? (
+            <Button onClick={handleBuy} disabled={isPending}>
+              {isPending ? '구매중...' : '구매'}
+            </Button>
+          ) : (
+            <Button onClick={handleBuy} disabled>
+              로그인 필요
+            </Button>
+          )}
+        </DialogFooter>
         {/* <DialogClose>Close</DialogClose> */}
-      </AlertDialogContent>
-    </AlertDialog>
+      </DialogContent>
+    </Dialog>
   );
 }

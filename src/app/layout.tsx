@@ -84,8 +84,8 @@ export default function RootLayout({
               </div>
             </div>
           </SidebarProvider>
+          <LayoutDialog />
         </QueryClientProvider>
-        <LayoutDialog />
       </body>
     </html>
   );
