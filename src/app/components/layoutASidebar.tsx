@@ -3,6 +3,7 @@ import { Card, CardDescription, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { fetchBuy } from '@/fetch/fetchBuy';
+import { TBuy } from '@/interface/TBuy';
 import { useGetBuyQuery } from '@/query/buy/useGetBuyQuery';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { useEffect, useState } from 'react';
@@ -42,7 +43,7 @@ export const LayoutASidebar = () => {
       <ScrollArea className="h-full">
         <div className="gap-2 flex flex-col p-2">
           data : {JSON.stringify(data)} : data
-          {data?.map((_, index) => (
+          {data?.map((item: TBuy, index: number) => (
             <Card key={index} className="w-[360px] p-2 flex flex-col gap-1">
               <div className="flex gap-2 justify-between items-center">
                 <div className="flex flex-col gap-2">
@@ -59,7 +60,7 @@ export const LayoutASidebar = () => {
                       </Avatar>
                     </div>
                     <div>
-                      <CardTitle>002810</CardTitle>
+                      <CardTitle>002810 ({item?.key})</CardTitle>
                       <CardDescription>삼영무역보통주</CardDescription>
                     </div>
                   </div>
