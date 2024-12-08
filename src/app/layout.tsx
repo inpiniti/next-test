@@ -1,29 +1,31 @@
-'use client';
+"use client";
 
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { useTheme } from "next-themes";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-import localFont from 'next/font/local';
-import './globals.css';
+import localFont from "next/font/local";
+import "./globals.css";
 
 const geistSans = localFont({
-  src: './fonts/GeistVF.woff',
-  variable: '--font-geist-sans',
-  weight: '100 900',
+  src: "./fonts/GeistVF.woff",
+  variable: "--font-geist-sans",
+  weight: "100 900",
 });
 const geistMono = localFont({
-  src: './fonts/GeistMonoVF.woff',
-  variable: '--font-geist-mono',
-  weight: '100 900',
+  src: "./fonts/GeistMonoVF.woff",
+  variable: "--font-geist-mono",
+  weight: "100 900",
 });
 
-import { SidebarProvider } from '@/components/ui/sidebar';
-import LayoutHeader from './components/layoutHeader';
-import LayoutSidebar from './components/layoutSidebar';
-import LayoutDialog from './components/layoutDialog';
-import { LayoutASidebar } from './components/layoutASidebar';
+import { SidebarProvider } from "@/components/ui/sidebar";
+import LayoutHeader from "./components/layoutHeader";
+import LayoutSidebar from "./components/layoutSidebar";
+import LayoutDialog from "./components/layoutDialog";
+import { LayoutASidebar } from "./components/layoutASidebar";
 
-import useFilterStore from '@/stores/useFilterStore';
-import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
+import useFilterStore from "@/stores/useFilterStore";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { ThemeProvider } from "@/components/theme-provider";
 
 export default function RootLayout({
   children,
@@ -66,26 +68,35 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <QueryClientProvider client={queryClient}>
-          <SidebarProvider>
-            <LayoutSidebar />
-            <div className="w-full h-svh flex flex-col divide-y overflow-hidden bg-neutral-50">
-              <LayoutHeader />
-              <div className="grow-1 h-full flex overflow-hidden divide-x">
-                <ScrollArea className="bg-neutral-100">
-                  {children}
-                  <ScrollBar orientation="horizontal" />
-                </ScrollArea>
-                {filter.asideOpen && (
-                  <div className="h-full">
-                    <LayoutASidebar />
-                  </div>
-                )}
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <QueryClientProvider client={queryClient}>
+            <SidebarProvider>
+              <LayoutSidebar />
+              <div
+                className={`w-full h-svh flex flex-col divide-y overflow-hidden bg-sidebar`}
+              >
+                <LayoutHeader />
+                <div className="grow-1 h-full flex overflow-hidden divide-x">
+                  <ScrollArea>
+                    {children}
+                    <ScrollBar orientation="horizontal" />
+                  </ScrollArea>
+                  {filter.asideOpen && (
+                    <div className="h-full">
+                      <LayoutASidebar />
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
-          </SidebarProvider>
-        </QueryClientProvider>
-        <LayoutDialog />
+            </SidebarProvider>
+          </QueryClientProvider>
+          <LayoutDialog />
+        </ThemeProvider>
       </body>
     </html>
   );
