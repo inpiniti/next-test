@@ -27,7 +27,7 @@ export const LayoutASidebar = () => {
     console.log(2);
 
     fetchBuy.get({ id: user?.id });
-  }, [refetch]);
+  }, [refetch, user?.id]);
 
   return (
     <aside className="flex flex-col h-full overflow-hidden divide-y">
