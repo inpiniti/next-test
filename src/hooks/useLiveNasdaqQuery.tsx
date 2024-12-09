@@ -12,7 +12,13 @@ const useLiveNasdaqQuery = () => {
 
   const query = useQuery({
     queryKey: ['useLiveNasdaq'],
-    queryFn: fetchLiveNasdaq,
+    queryFn: async () => {
+      const data = await fetchLiveNasdaq();
+      if (Array.isArray(data) && data.length === 0) {
+        throw new Error('Empty data');
+      }
+      return data;
+    },
     refetchInterval: 60000, // 1분마다 패칭
     enabled: isFetchingEnabled, // 패칭 활성화/비활성화
   });

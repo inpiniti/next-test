@@ -11,16 +11,21 @@ interface LiveMarketStore {
 }
 
 const useLiveMarketStore = create<LiveMarketStore>()(
-  devtools((set, get) => ({
-    marketName: null,
-    marketList: [],
-    setMarketId: (name: string) => set({ marketName: name }),
-    setMarketList: (data: IStock[]) => set({ marketList: data }),
-    getMarket: () => {
-      const { marketName, marketList } = get();
-      return marketList.find((item: IStock) => item.name === marketName);
-    },
-  }))
+  devtools(
+    (set, get) => ({
+      marketName: null,
+      marketList: [],
+      setMarketId: (name: string) => set({ marketName: name }),
+      setMarketList: (data: IStock[]) => set({ marketList: data }),
+      getMarket: () => {
+        const { marketName, marketList } = get();
+        return marketList.find((item: IStock) => item.name === marketName);
+      },
+    }),
+    {
+      name: 'LiveMarketStore',
+    }
+  )
 );
 
 export default useLiveMarketStore;

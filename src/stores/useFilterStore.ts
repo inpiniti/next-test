@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { devtools } from 'zustand/middleware';
+import { createJSONStorage, devtools, persist } from 'zustand/middleware';
 
 export interface IFilter {
   market: string;
@@ -20,21 +20,30 @@ interface FilterStore {
 }
 
 const useFilterStore = create<FilterStore>()(
-  devtools((set) => ({
-    filter: {
-      market: 'seoul',
-      stock: '',
-      sector: '',
-      minVolume: 10000,
-      minGrowthRate: 10,
-      avgGrowthRate: 50,
-      displayItemCount: 100,
-      sortConfig: 'full_model_1h_prediction',
-      isDialogOpen: false,
-      asideOpen: true,
-    },
-    setFilter: (filter: IFilter) => set({ filter }),
-  }))
+  devtools(
+    persist(
+      (set) => ({
+        filter: {
+          market: 'seoul',
+          stock: '',
+          sector: '',
+          minVolume: 10000,
+          minGrowthRate: 10,
+          avgGrowthRate: 50,
+          displayItemCount: 100,
+          sortConfig: 'full_model_1h_prediction',
+          isDialogOpen: false,
+          asideOpen: true,
+        },
+        setFilter: (filter: IFilter) => set({ filter }),
+      }),
+      {
+        name: 'filter-storage',
+        storage: createJSONStorage(() => localStorage),
+      }
+    ),
+    { name: 'FilterStore' }
+  )
 );
 
 export default useFilterStore;

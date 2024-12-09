@@ -16,21 +16,11 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { ChevronsUpDown } from 'lucide-react';
-import { useEffect, useMemo } from 'react';
-import useLiveNasdaqQuery from '@/hooks/useLiveNasdaqQuery';
-import useLiveSeoulQuery from '@/hooks/useLiveSeoulQuery';
-import useLiveKosdaqQuery from '@/hooks/useLiveKosdaqQuery';
+import { useMemo } from 'react';
 
 export default function LayoutSidebarMarket() {
   const { isMobile } = useSidebar();
   const { filter, setFilter } = useFilterStore();
-
-  const { query: seoulQuery, toggleFetching: seoulToggle } =
-    useLiveSeoulQuery();
-  const { query: kosdaqQuery, toggleFetching: kosdaqToggle } =
-    useLiveKosdaqQuery();
-  const { query: nasdaqQuery, toggleFetching: nasdaqToggle } =
-    useLiveNasdaqQuery();
 
   const koreanMarket = useMemo(() => {
     return filter.market === 'seoul'
@@ -52,35 +42,6 @@ export default function LayoutSidebarMarket() {
         return null;
     }
   }, [filter.market]);
-
-  useEffect(() => {
-    seoulToggle(false);
-    kosdaqToggle(false);
-    nasdaqToggle(false);
-
-    switch (filter.market) {
-      case 'seoul':
-        seoulToggle(true);
-        break;
-      case 'kosdaq':
-        kosdaqToggle(true);
-        break;
-      case 'nasdaq':
-        nasdaqToggle(true);
-        break;
-      default:
-        // Perform side effect for default case
-        break;
-    }
-  }, [
-    filter.market,
-    seoulQuery,
-    seoulToggle,
-    kosdaqQuery,
-    kosdaqToggle,
-    nasdaqQuery,
-    nasdaqToggle,
-  ]);
 
   return (
     <SidebarMenu>

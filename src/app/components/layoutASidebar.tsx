@@ -7,7 +7,9 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { TBuy } from '@/interface/TBuy';
 import { useGetBuyQuery } from '@/query/buy/useGetBuyQuery';
 import { useAuthStore } from '@/stores/useAuthStore';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import useLiveMarketStore from '@/stores/useLiveMarketStore';
+import IStock from '@/interface/IStock';
 
 export const LayoutASidebar = () => {
   const [live] = useState({
@@ -20,6 +22,25 @@ export const LayoutASidebar = () => {
 
   // 쿼리
   const { data, refetch, isLoading, isError } = useGetBuyQuery(user?.id);
+  const { marketList } = useLiveMarketStore();
+
+  const marketListFilter = useMemo(() => {
+    const filter = marketList
+      ?.filter((marketItem: IStock) =>
+        data.some((buyItem: TBuy) => marketItem.name === buyItem.name)
+      )
+      .map((marketItem: IStock) => {
+        const buyItem = data.find(
+          (buyItem: TBuy) => marketItem.name === buyItem.name
+        );
+        return {
+          ...marketItem,
+          buyData: buyItem,
+        };
+      });
+
+    return filter;
+  }, [marketList, data]);
 
   useEffect(() => {
     if (user?.id) {
@@ -39,12 +60,13 @@ export const LayoutASidebar = () => {
       </Tabs>
       <ScrollArea className="h-full">
         <div className="gap-2 flex flex-col p-2">
+          {!user?.id && <div>로그인이 필요합니다.</div>}
           {isLoading && <div>Loading...</div>}
           {isError && <div>데이터를 불러오는 중 오류가 발생했습니다.</div>}
           {data && data.length === 0 && <div>구매 목록이 없습니다.</div>}
           {data &&
             data.length > 0 &&
-            data.map((item: TBuy, index: number) => (
+            marketListFilter.map((item: IStock, index: number) => (
               <Card key={index} className="w-[360px] p-2 flex flex-col gap-1">
                 <div className="flex gap-2 justify-between items-center">
                   <div className="flex flex-col gap-2">
@@ -52,7 +74,7 @@ export const LayoutASidebar = () => {
                       <div>
                         <Avatar className="border">
                           <AvatarImage
-                            src={`https://s3-symbol-logo.tradingview.com/${live.logoid}--big.svg`}
+                            src={`https://s3-symbol-logo.tradingview.com/${item.logoid}--big.svg`}
                             alt="@radix-vue"
                           />
                           <AvatarFallback>
@@ -61,8 +83,8 @@ export const LayoutASidebar = () => {
                         </Avatar>
                       </div>
                       <div>
-                        <CardTitle>002810 ({item?.key})</CardTitle>
-                        <CardDescription>삼영무역보통주</CardDescription>
+                        <CardTitle>{item.name}</CardTitle>
+                        <CardDescription>{item.description}</CardDescription>
                       </div>
                     </div>
                     <div className="flex justify-between gap-2">
@@ -88,14 +110,14 @@ export const LayoutASidebar = () => {
                     <div className="whitespace-nowrap overflow-hidden text-ellipsis flex flex-col">
                       <span className="text-xs text-neutral-400">현재가</span>
                       <div className="flex items-center gap-1">
-                        <p>12,820원</p>
+                        <p>{item.close}</p>
                         <span className="text-xs">(-4.26%)</span>
                       </div>
                     </div>
                     <div className="whitespace-nowrap overflow-hidden text-ellipsis flex flex-col">
                       <span className="text-xs text-neutral-400">구매가</span>
                       <div className="flex items-center gap-1">
-                        <p>12,820원</p>
+                        <p>{item.buyData.price}원</p>
                         <span className="text-xs">(-4.26%)</span>
                       </div>
                     </div>
