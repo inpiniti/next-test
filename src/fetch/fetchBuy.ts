@@ -1,13 +1,12 @@
 import { TBuy } from '@/interface/TBuy';
 
 export const fetchBuy = {
-  get: async (body: TBuy) => {
-    const response = await fetch(`api/buy`, {
+  get: async (id: string) => {
+    const response = await fetch(`api/buy?id=${id}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(body),
     });
     if (!response.ok) {
       throw new Error('네트워크 응답이 올바르지 않습니다.');

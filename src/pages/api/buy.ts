@@ -7,18 +7,21 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { method, body } = req;
+  const { method, query, body } = req;
 
   try {
     switch (method) {
       case 'GET':
-        console.log(1);
+        const { id } = query; // 쿼리 파라미터에서 id 값을 읽어옴
+        if (!id || Array.isArray(id)) {
+          return res
+            .status(400)
+            .json({ error: 'id is required and must be a string' });
+        }
         const buys = await db
           .select()
           .from(buyTable)
-          .where(eq(buyTable.id, body.id));
-
-        console.log(2);
+          .where(eq(buyTable.id, String(id)));
 
         res.status(200).json(buys);
         break;
