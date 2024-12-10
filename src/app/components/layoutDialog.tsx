@@ -11,17 +11,19 @@ import NumberField from './NumberField';
 import { usePostBuyMutation } from '@/query/buy/usePostBuyMutation';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { DialogTitle } from '@radix-ui/react-dialog';
+import { useGetBuyQuery } from '@/query/buy/useGetBuyQuery';
 
 export default function LayoutDialog() {
   const { filter, setFilter } = useFilterStore();
   const { getMarket, marketName } = useLiveMarketStore();
   const [selectedStock, setSelectedStock] = useState<IStock>();
 
-  // 뮤테이션
-  const { isPending, mutate } = usePostBuyMutation();
-
   // 유저 정보
   const { user } = useAuthStore();
+
+  // 뮤테이션
+  const { isPending, mutate, isSuccess } = usePostBuyMutation();
+  const { refetch } = useGetBuyQuery(user?.id);
 
   useEffect(() => {
     setSelectedStock(getMarket());
@@ -48,6 +50,14 @@ export default function LayoutDialog() {
         price,
       });
   };
+
+  // 구매하기 완료후
+  useEffect(() => {
+    if (isSuccess) {
+      refetch();
+      filter.isDialogOpen = false;
+    }
+  }, [isSuccess, refetch, filter]);
 
   return (
     <Dialog open={filter.isDialogOpen} onOpenChange={handleOpenChange}>
