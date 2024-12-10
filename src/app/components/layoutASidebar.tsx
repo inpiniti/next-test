@@ -10,6 +10,7 @@ import { useAuthStore } from '@/stores/useAuthStore';
 import { useEffect, useMemo, useState } from 'react';
 import useLiveMarketStore from '@/stores/useLiveMarketStore';
 import IStock from '@/interface/IStock';
+import useFilterStore from '@/stores/useFilterStore';
 
 export const LayoutASidebar = () => {
   const [live] = useState({
@@ -22,7 +23,8 @@ export const LayoutASidebar = () => {
 
   // 쿼리
   const { data, refetch, isLoading, isError } = useGetBuyQuery(user?.id);
-  const { marketList } = useLiveMarketStore();
+  const { marketList, setMarketId } = useLiveMarketStore();
+  const { filter, setFilter } = useFilterStore();
 
   const marketListFilter = useMemo(() => {
     const filter = marketList
@@ -41,6 +43,12 @@ export const LayoutASidebar = () => {
 
     return filter;
   }, [marketList, data]);
+
+  // 카드 클릭
+  const cardClick = (item: IStock) => {
+    setMarketId(item.name);
+    setFilter({ ...filter, isDialogOpen: true });
+  };
 
   useEffect(() => {
     if (user?.id) {
@@ -67,7 +75,11 @@ export const LayoutASidebar = () => {
           {data &&
             data.length > 0 &&
             marketListFilter.map((item: IStock, index: number) => (
-              <Card key={index} className="w-[360px] p-2 flex flex-col gap-1">
+              <Card
+                key={index}
+                className="w-[360px] p-2 flex flex-col gap-1 cursor-pointer hover:bg-neutral-50"
+                onClick={() => cardClick(item)}
+              >
                 <div className="flex gap-2 justify-between items-center">
                   <div className="flex flex-col gap-2">
                     <div className="flex gap-2 items-center">
