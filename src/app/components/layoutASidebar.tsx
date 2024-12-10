@@ -114,7 +114,7 @@ export const LayoutASidebar = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="flex flex-col space-y-1.5 items-end">
+                  <div className="flex flex-col space-y-1.5 items-start w-24">
                     <div className="whitespace-nowrap overflow-hidden text-ellipsis flex flex-col">
                       <span className="text-xs text-neutral-400">현재가</span>
                       <div className="flex items-center gap-1">
