@@ -27,7 +27,7 @@ export const LayoutASidebar = () => {
   const marketListFilter = useMemo(() => {
     const filter = marketList
       ?.filter((marketItem: IStock) =>
-        data.some((buyItem: TBuy) => marketItem.name === buyItem.name)
+        data?.some((buyItem: TBuy) => marketItem.name === buyItem.name)
       )
       .map((marketItem: IStock) => {
         const buyItem = data.find(
@@ -49,7 +49,7 @@ export const LayoutASidebar = () => {
   }, [refetch, user?.id]);
 
   return (
-    <aside className="flex flex-col h-full overflow-hidden divide-y w-[360px]">
+    <aside className="flex flex-col h-full overflow-hidden divide-y min-w-[376px]">
       <Tabs defaultValue="account" className="shrink-0 p-2">
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="account" onClick={() => refetch()}>
@@ -90,19 +90,27 @@ export const LayoutASidebar = () => {
                     <div className="flex justify-between gap-2">
                       <div>
                         <div className="text-xs text-neutral-400">최소</div>
-                        <div className="text-sm">30.22%</div>
+                        <div className="text-sm">
+                          {Number(item.minChange).toFixed(2)}%
+                        </div>
                       </div>
                       <div>
                         <div className="text-xs text-neutral-400">1시간후</div>
-                        <div className="text-sm">41.73%</div>
+                        <div className="text-sm">
+                          {Number(item.full_model_1h_prediction).toFixed(2)}%
+                        </div>
                       </div>
                       <div>
                         <div className="text-xs text-neutral-400">평균</div>
-                        <div className="text-sm">60.17%</div>
+                        <div className="text-sm">
+                          {Number(item.avgChange).toFixed(2)}%
+                        </div>
                       </div>
                       <div>
                         <div className="text-xs text-neutral-400">최대</div>
-                        <div className="text-sm">95.93%</div>
+                        <div className="text-sm">
+                          {Number(item.maxChange).toFixed(2)}%
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -111,14 +119,25 @@ export const LayoutASidebar = () => {
                       <span className="text-xs text-neutral-400">현재가</span>
                       <div className="flex items-center gap-1">
                         <p>{item.close}</p>
-                        <span className="text-xs">(-4.26%)</span>
+                        <span className="text-xs">
+                          ({Number(item.change).toFixed(2)})
+                        </span>
                       </div>
                     </div>
                     <div className="whitespace-nowrap overflow-hidden text-ellipsis flex flex-col">
                       <span className="text-xs text-neutral-400">구매가</span>
                       <div className="flex items-center gap-1">
-                        <p>{item.buyData.price}원</p>
-                        <span className="text-xs">(-4.26%)</span>
+                        <p>{item?.buyData?.price}</p>
+                        <span className="text-xs">
+                          (
+                          {(
+                            ((Number(item?.buyData?.price) -
+                              Number(item?.close)) /
+                              Number(item?.buyData?.price)) *
+                            100
+                          ).toFixed(2)}
+                          )
+                        </span>
                       </div>
                     </div>
                   </div>

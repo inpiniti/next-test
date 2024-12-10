@@ -1,3 +1,5 @@
+import { TBuy } from './TBuy';
+
 export default interface IStock {
   name: string; // 주식 이름
   description?: string; // 주식 설명
@@ -132,4 +134,6 @@ export default interface IStock {
     key: string;
     change: number;
   }>; // 차트 데이터
+
+  buyData?: TBuy;
 }
