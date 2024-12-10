@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button';
 import IStock from '@/interface/IStock';
 import useFilterStore from '@/stores/useFilterStore';
 import useLiveMarketStore from '@/stores/useLiveMarketStore';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -12,10 +12,13 @@ import { usePostBuyMutation } from '@/query/buy/usePostBuyMutation';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { DialogTitle } from '@radix-ui/react-dialog';
 import { useGetBuyQuery } from '@/query/buy/useGetBuyQuery';
+import { ShoppingCart, Star } from 'lucide-react';
 
 export default function LayoutDialog() {
   const { filter, setFilter } = useFilterStore();
   const { getMarket, marketName } = useLiveMarketStore();
+
+  // 선택한 종목
   const [selectedStock, setSelectedStock] = useState<IStock>();
 
   // 유저 정보
@@ -24,6 +27,21 @@ export default function LayoutDialog() {
   // 뮤테이션
   const { isPending, mutate, isSuccess } = usePostBuyMutation();
   const { refetch } = useGetBuyQuery(user?.id);
+
+  // 구매 종목
+  const { data } = useGetBuyQuery(user?.id);
+
+  // 구매 종목에 있는지
+  const isExist = useMemo(
+    () => data?.some((buyItem: IStock) => buyItem.name === selectedStock?.name),
+    [data, selectedStock]
+  );
+
+  // 구매 종목 정보
+  const buyData = useMemo(
+    () => data?.find((buyItem: IStock) => buyItem.name === selectedStock?.name),
+    [data, selectedStock]
+  );
 
   useEffect(() => {
     setSelectedStock(getMarket());
@@ -62,7 +80,22 @@ export default function LayoutDialog() {
   return (
     <Dialog open={filter.isDialogOpen} onOpenChange={handleOpenChange}>
       <DialogContent className="w-full">
-        <DialogTitle>구매하기</DialogTitle> {/* DialogTitle 추가 */}
+        <DialogTitle className="flex justify-between">
+          구매하기
+          <div className="absolute top-5 right-9 flex gap-2">
+            <div className="text-yellow-500 flex flex-col items-center gap-1">
+              <Star
+                className={`text-yellow-400 ${isExist && `fill-current`}`}
+              />
+            </div>
+            <div className="text-blue-500 flex flex-col items-center gap-1">
+              <ShoppingCart />
+              <p className="text-xs">{buyData?.number || 0}</p>
+            </div>
+          </div>
+          {/* <Star className="w-5 h-5 fill-current" /> */}
+        </DialogTitle>
+
         <div className="flex items-center gap-2">
           <Avatar className="border">
             <AvatarImage
