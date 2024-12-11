@@ -13,7 +13,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useConsistentDividendQuery } from "@/query/toss/useConsistentDividendQuery";
 import { useEscapingUndervaluedQuery } from "@/query/toss/useEscapingUndervaluedQuery";
 import { useGrowthExpectationQuery } from "@/query/toss/useGrowthExpectationQuery";
@@ -24,7 +23,6 @@ import { useRisingQuery } from "@/query/toss/useRisingQuery";
 import { useUndervaluedGrowthQuery } from "@/query/toss/useUndervaluedGrowthQuery";
 
 import useFilterStore from "@/stores/useFilterStore";
-import { set } from "date-fns";
 import { useState } from "react";
 import { FaBookmark, FaRegBookmark } from "react-icons/fa";
 
