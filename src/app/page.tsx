@@ -69,6 +69,8 @@ export default function Home() {
         filteredData = filteredData.filter((item) =>
           filter.screener.includes(item.name)
         );
+        // 소팅도 안되도록
+        return filteredData;
       } else {
         // // filter.sector 으로 sector_tr 에서 like 필터
         if (filter.sector && filter.sector !== "all") {
