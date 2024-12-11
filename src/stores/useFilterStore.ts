@@ -32,7 +32,7 @@ const useFilterStore = create<FilterStore>()(
           minGrowthRate: 10,
           avgGrowthRate: 50,
           displayItemCount: 100,
-          sortConfig: "full_model_1h_prediction",
+          sortConfig: "",
           isDialogOpen: false,
           asideOpen: true,
           screener: [],

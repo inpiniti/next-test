@@ -64,14 +64,14 @@ export default function Home() {
             item.name.toLowerCase().includes(filter.stock.toLowerCase()) ||
             item.description?.toLowerCase().includes(filter.stock.toLowerCase())
         );
-      } else if (filter?.screener?.length > 0) {
-        // 스크리너 선택시에도 다른 필터 적용이 안되도록
-        filteredData = filteredData.filter((item) =>
-          filter.screener.includes(item.name)
-        );
-        // 소팅도 안되도록
-        return filteredData;
       } else {
+        // // filter.sector 으로 sector_tr 에서 like 필터
+        if (filter?.screener?.length > 0) {
+          filteredData = filteredData.filter((item) =>
+            filter.screener.includes(item.name)
+          );
+        }
+
         // // filter.sector 으로 sector_tr 에서 like 필터
         if (filter.sector && filter.sector !== "all") {
           filteredData = filteredData.filter((item) =>
@@ -101,18 +101,22 @@ export default function Home() {
         }
       }
 
-      return [...filteredData]
-        .sort((a, b) => {
-          const aValue = Number(a[filter.sortConfig as keyof IStock]);
-          const bValue = Number(b[filter.sortConfig as keyof IStock]);
+      if (filter.sortConfig !== "") {
+        return [...filteredData]
+          .sort((a, b) => {
+            const aValue = Number(a[filter.sortConfig as keyof IStock]);
+            const bValue = Number(b[filter.sortConfig as keyof IStock]);
 
-          if (aValue < bValue) {
-            return 1;
-          } else {
-            return -1;
-          }
-        })
-        .slice(0, filter.displayItemCount); // 처음 100개 항목만 선택
+            if (aValue < bValue) {
+              return 1;
+            } else {
+              return -1;
+            }
+          })
+          .slice(0, filter.displayItemCount); // 처음 100개 항목만 선택
+      } else {
+        return [...filteredData].slice(0, filter.displayItemCount); // 처음 100개 항목만 선택
+      }
     }
     return marketList;
   }, [marketList, filter]);
@@ -135,7 +139,13 @@ export default function Home() {
             <TableHead>거래량</TableHead>
             <TableHead
               className="cursor-pointer"
-              onClick={() => setFilter({ ...filter, sortConfig: "minChange" })}
+              onClick={() => {
+                if (filter.sortConfig === "minChange") {
+                  setFilter({ ...filter, sortConfig: "" });
+                } else {
+                  setFilter({ ...filter, sortConfig: "minChange" });
+                }
+              }}
             >
               <div className="flex items-center gap-2">
                 최소
@@ -148,7 +158,13 @@ export default function Home() {
             </TableHead>
             <TableHead
               className="cursor-pointer"
-              onClick={() => setFilter({ ...filter, sortConfig: "avgChange" })}
+              onClick={() => {
+                if (filter.sortConfig === "avgChange") {
+                  setFilter({ ...filter, sortConfig: "" });
+                } else {
+                  setFilter({ ...filter, sortConfig: "avgChange" });
+                }
+              }}
             >
               <div className="flex items-center gap-2">
                 평균
@@ -161,7 +177,13 @@ export default function Home() {
             </TableHead>
             <TableHead
               className="cursor-pointer"
-              onClick={() => setFilter({ ...filter, sortConfig: "maxChange" })}
+              onClick={() => {
+                if (filter.sortConfig === "maxChange") {
+                  setFilter({ ...filter, sortConfig: "" });
+                } else {
+                  setFilter({ ...filter, sortConfig: "maxChange" });
+                }
+              }}
             >
               <div className="flex items-center gap-2">
                 최대
@@ -174,9 +196,16 @@ export default function Home() {
             </TableHead>
             <TableHead
               className="cursor-pointer"
-              onClick={() =>
-                setFilter({ ...filter, sortConfig: "full_model_1h_prediction" })
-              }
+              onClick={() => {
+                if (filter.sortConfig === "full_model_1h_prediction") {
+                  setFilter({ ...filter, sortConfig: "" });
+                } else {
+                  setFilter({
+                    ...filter,
+                    sortConfig: "full_model_1h_prediction",
+                  });
+                }
+              }}
             >
               <div className="flex items-center gap-2">
                 1h

@@ -196,12 +196,20 @@ export default function LayoutSidebarFilter() {
               </div>
               <Select
                 value={filter?.sortConfig?.toString()}
-                onValueChange={(value) =>
-                  setFilter({
-                    ...filter,
-                    sortConfig: value,
-                  })
-                }
+                onValueChange={(value) => {
+                  const prev = filter.sortConfig;
+                  if (prev === value) {
+                    setFilter({
+                      ...filter,
+                      sortConfig: "",
+                    });
+                  } else {
+                    setFilter({
+                      ...filter,
+                      sortConfig: value,
+                    });
+                  }
+                }}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="아이탬 수를 선택하세요." />
