@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Table,
   TableBody,
@@ -8,16 +8,16 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
-import useLiveKosdaqQuery from '@/hooks/useLiveKosdaqQuery';
-import useLiveNasdaqQuery from '@/hooks/useLiveNasdaqQuery';
-import useLiveSeoulQuery from '@/hooks/useLiveSeoulQuery';
+} from "@/components/ui/table";
+import useLiveKosdaqQuery from "@/hooks/useLiveKosdaqQuery";
+import useLiveNasdaqQuery from "@/hooks/useLiveNasdaqQuery";
+import useLiveSeoulQuery from "@/hooks/useLiveSeoulQuery";
 
-import IStock from '@/interface/IStock';
-import useFilterStore from '@/stores/useFilterStore';
-import useLiveMarketStore from '@/stores/useLiveMarketStore';
-import { useEffect, useMemo } from 'react';
-import { FaSort, FaSortDown } from 'react-icons/fa';
+import IStock from "@/interface/IStock";
+import useFilterStore from "@/stores/useFilterStore";
+import useLiveMarketStore from "@/stores/useLiveMarketStore";
+import { useEffect, useMemo } from "react";
+import { FaSort, FaSortDown } from "react-icons/fa";
 
 export default function Home() {
   const { marketName, marketList, setMarketId } = useLiveMarketStore();
@@ -30,17 +30,17 @@ export default function Home() {
 
   useEffect(() => {
     switch (filter.market) {
-      case 'seoul':
+      case "seoul":
         seoulToggle(true);
         kosdaqToggle(false);
         nasdaqToggle(false);
         break;
-      case 'kosdaq':
+      case "kosdaq":
         kosdaqToggle(true);
         seoulToggle(false);
         nasdaqToggle(false);
         break;
-      case 'nasdaq':
+      case "nasdaq":
         nasdaqToggle(true);
         seoulToggle(false);
         kosdaqToggle(false);
@@ -64,9 +64,14 @@ export default function Home() {
             item.name.toLowerCase().includes(filter.stock.toLowerCase()) ||
             item.description?.toLowerCase().includes(filter.stock.toLowerCase())
         );
+      } else if (filter?.screener?.length > 0) {
+        // 스크리너 선택시에도 다른 필터 적용이 안되도록
+        filteredData = filteredData.filter((item) =>
+          filter.screener.includes(item.name)
+        );
       } else {
         // // filter.sector 으로 sector_tr 에서 like 필터
-        if (filter.sector && filter.sector !== 'all') {
+        if (filter.sector && filter.sector !== "all") {
           filteredData = filteredData.filter((item) =>
             item.sector_tr?.toLowerCase().includes(filter.sector.toLowerCase())
           );
@@ -128,11 +133,11 @@ export default function Home() {
             <TableHead>거래량</TableHead>
             <TableHead
               className="cursor-pointer"
-              onClick={() => setFilter({ ...filter, sortConfig: 'minChange' })}
+              onClick={() => setFilter({ ...filter, sortConfig: "minChange" })}
             >
               <div className="flex items-center gap-2">
                 최소
-                {filter.sortConfig === 'minChange' ? (
+                {filter.sortConfig === "minChange" ? (
                   <FaSortDown />
                 ) : (
                   <FaSort className="text-neutral-300" />
@@ -141,11 +146,11 @@ export default function Home() {
             </TableHead>
             <TableHead
               className="cursor-pointer"
-              onClick={() => setFilter({ ...filter, sortConfig: 'avgChange' })}
+              onClick={() => setFilter({ ...filter, sortConfig: "avgChange" })}
             >
               <div className="flex items-center gap-2">
                 평균
-                {filter.sortConfig === 'avgChange' ? (
+                {filter.sortConfig === "avgChange" ? (
                   <FaSortDown />
                 ) : (
                   <FaSort className="text-neutral-300" />
@@ -154,11 +159,11 @@ export default function Home() {
             </TableHead>
             <TableHead
               className="cursor-pointer"
-              onClick={() => setFilter({ ...filter, sortConfig: 'maxChange' })}
+              onClick={() => setFilter({ ...filter, sortConfig: "maxChange" })}
             >
               <div className="flex items-center gap-2">
                 최대
-                {filter.sortConfig === 'maxChange' ? (
+                {filter.sortConfig === "maxChange" ? (
                   <FaSortDown />
                 ) : (
                   <FaSort className="text-neutral-300" />
@@ -168,12 +173,12 @@ export default function Home() {
             <TableHead
               className="cursor-pointer"
               onClick={() =>
-                setFilter({ ...filter, sortConfig: 'full_model_1h_prediction' })
+                setFilter({ ...filter, sortConfig: "full_model_1h_prediction" })
               }
             >
               <div className="flex items-center gap-2">
                 1h
-                {filter.sortConfig === 'full_model_1h_prediction' ? (
+                {filter.sortConfig === "full_model_1h_prediction" ? (
                   <FaSortDown />
                 ) : (
                   <FaSort className="text-neutral-300" />
@@ -208,7 +213,7 @@ export default function Home() {
           {sortedData.map((live) => (
             <TableRow
               className={`cursor-pointer ${
-                marketName === live.name ? 'bg-accent' : ''
+                marketName === live.name ? "bg-accent" : ""
               }`}
               key={live.name}
               onClick={() => rowClick(live.name)}
@@ -235,10 +240,10 @@ export default function Home() {
               <TableCell
                 className={`${
                   Number(live.change) > 0
-                    ? 'text-red-500'
+                    ? "text-red-500"
                     : Number(live.change) < 0
-                    ? 'text-blue-500'
-                    : ''
+                    ? "text-blue-500"
+                    : ""
                 }`}
               >
                 {live.close}({Number(live.change).toFixed(2)}%)
@@ -246,10 +251,10 @@ export default function Home() {
               <TableCell
                 className={`${
                   Number(live.volume_change) > 0
-                    ? 'text-red-500'
+                    ? "text-red-500"
                     : Number(live.volume_change) < 0
-                    ? 'text-blue-500'
-                    : ''
+                    ? "text-blue-500"
+                    : ""
                 }`}
               >
                 {Number(live.volume).toLocaleString()}(

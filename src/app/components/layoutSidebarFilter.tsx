@@ -5,11 +5,11 @@ import {
   FaEquals,
   FaList,
   FaSort,
-} from 'react-icons/fa';
+} from "react-icons/fa";
 
-import useFilterStore from '@/stores/useFilterStore';
-import useLiveMarketStore from '@/stores/useLiveMarketStore';
-import { useMemo } from 'react';
+import useFilterStore from "@/stores/useFilterStore";
+import useLiveMarketStore from "@/stores/useLiveMarketStore";
+import { useMemo } from "react";
 
 import {
   Select,
@@ -19,7 +19,7 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
+} from "@/components/ui/select";
 
 import {
   SidebarGroup,
@@ -27,10 +27,10 @@ import {
   SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuItem,
-} from '@/components/ui/sidebar';
+} from "@/components/ui/sidebar";
 
-import NumberField from './NumberField';
-import { ComponentName } from '@/components/ComponentName';
+import NumberField from "./NumberField";
+import { ComponentName } from "@/components/ComponentName";
 
 export default function LayoutSidebarFilter() {
   const filter = useFilterStore((state) => state.filter);
@@ -195,7 +195,7 @@ export default function LayoutSidebarFilter() {
                 정렬
               </div>
               <Select
-                value={filter.sortConfig.toString()}
+                value={filter?.sortConfig?.toString()}
                 onValueChange={(value) =>
                   setFilter({
                     ...filter,
