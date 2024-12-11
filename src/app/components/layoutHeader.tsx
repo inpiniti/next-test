@@ -126,34 +126,32 @@ export default function LayoutHeader() {
           onChange={(e) => setFilter({ ...filter, stock: e.target.value })}
           placeholder="종목검색"
         />
+        <Select value={screener} onValueChange={handleDisplayItemCountChange}>
+          <SelectTrigger>
+            <SelectValue placeholder="트랜딩 주식" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectLabel>트랜딩 주식</SelectLabel>
+              <SelectItem value="all">전체</SelectItem>
+              <SelectItem value="rising">연속 상승세</SelectItem>
+              <SelectItem value="undervaluedGrowth">저평가 성장주</SelectItem>
+              <SelectItem value="inexpensiveValue">
+                아직 저렴한 가치주
+              </SelectItem>
+              <SelectItem value="consistentDividend">꾸준한 배당주</SelectItem>
+              <SelectItem value="profitableCompanies">
+                돈 잘 버는 회사
+              </SelectItem>
+              <SelectItem value="escapingUndervalued">저평가 탈출</SelectItem>
+              <SelectItem value="growthExpectation">성장 기대주</SelectItem>
+              <SelectItem value="highProfitUndervalued">
+                고수익 저평가
+              </SelectItem>
+            </SelectGroup>
+          </SelectContent>
+        </Select>
         <div className="hidden md:flex gap-2">
-          <Select value={screener} onValueChange={handleDisplayItemCountChange}>
-            <SelectTrigger>
-              <SelectValue placeholder="트랜딩 주식" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectLabel>트랜딩 주식</SelectLabel>
-                <SelectItem value="all">전체</SelectItem>
-                <SelectItem value="rising">연속 상승세</SelectItem>
-                <SelectItem value="undervaluedGrowth">저평가 성장주</SelectItem>
-                <SelectItem value="inexpensiveValue">
-                  아직 저렴한 가치주
-                </SelectItem>
-                <SelectItem value="consistentDividend">
-                  꾸준한 배당주
-                </SelectItem>
-                <SelectItem value="profitableCompanies">
-                  돈 잘 버는 회사
-                </SelectItem>
-                <SelectItem value="escapingUndervalued">저평가 탈출</SelectItem>
-                <SelectItem value="growthExpectation">성장 기대주</SelectItem>
-                <SelectItem value="highProfitUndervalued">
-                  고수익 저평가
-                </SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
           <SettingsDialog />
         </div>
       </div>
