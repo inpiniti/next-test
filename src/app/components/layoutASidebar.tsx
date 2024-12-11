@@ -11,6 +11,7 @@ import { useEffect, useMemo, useState } from 'react';
 import useLiveMarketStore from '@/stores/useLiveMarketStore';
 import IStock from '@/interface/IStock';
 import useFilterStore from '@/stores/useFilterStore';
+import { ComponentName } from '@/components/ComponentName';
 
 export const LayoutASidebar = () => {
   const [live] = useState({
@@ -57,7 +58,8 @@ export const LayoutASidebar = () => {
   }, [refetch, user?.id]);
 
   return (
-    <aside className="flex flex-col h-full overflow-hidden divide-y min-w-[376px]">
+    <aside className="flex flex-col h-full overflow-hidden divide-y min-w-[376px] relative">
+      <ComponentName name="<LayoutASidebar>" />
       <Tabs defaultValue="account" className="shrink-0 p-2">
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="account" onClick={() => refetch()}>

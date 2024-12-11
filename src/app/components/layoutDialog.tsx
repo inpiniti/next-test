@@ -13,6 +13,7 @@ import { useAuthStore } from '@/stores/useAuthStore';
 import { DialogTitle } from '@radix-ui/react-dialog';
 import { useGetBuyQuery } from '@/query/buy/useGetBuyQuery';
 import { ShoppingCart, Star } from 'lucide-react';
+import { ComponentName } from '@/components/ComponentName';
 
 export default function LayoutDialog() {
   const { filter, setFilter } = useFilterStore();
@@ -77,11 +78,23 @@ export default function LayoutDialog() {
     }
   }, [isSuccess, refetch, filter]);
 
+  // 수량 및 가격 변경
+  useEffect(() => {
+    if (isExist) {
+      setNumber(buyData.number);
+      setPrice(buyData.price);
+    } else {
+      setNumber(0);
+      setPrice(0);
+    }
+  }, [isExist, buyData]);
+
   return (
     <Dialog open={filter.isDialogOpen} onOpenChange={handleOpenChange}>
       <DialogContent className="w-full">
-        <DialogTitle className="flex justify-between">
-          구매하기
+        <ComponentName name="<layoutDialog>" />
+        <DialogTitle className="flex justify-between font-bold">
+          {isExist ? '변경하기' : '구매하기'}
           <div className="absolute top-5 right-9 flex gap-2">
             <div className="text-yellow-500 flex flex-col items-center gap-1">
               <Star
@@ -131,7 +144,7 @@ export default function LayoutDialog() {
         <form>
           <div className="grid w-full items-center gap-4">
             <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="name">구매수량</Label>
+              <Label htmlFor="name">{isExist ? '보유수량' : '구매수량'}</Label>
               <NumberField
                 className="bg-white"
                 value={number}
@@ -170,7 +183,9 @@ export default function LayoutDialog() {
               />
             </div>
             <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="framework">구매가격</Label>
+              <Label htmlFor="framework">
+                {isExist ? '평단가' : '구매가격'}
+              </Label>
               <Input
                 value={price}
                 onChange={(e) => setPrice(Number(e.target.value))}
@@ -187,8 +202,9 @@ export default function LayoutDialog() {
           </Button>
           {user?.id && isExist ? (
             <>
-              <Button variant="destructive">삭제</Button>
-              <Button>수정</Button>
+              <Button variant="destructive">구매에서 제거</Button>
+              <Button variant="default">판매</Button>
+              <Button>수량 및 가격 수정</Button>
             </>
           ) : user?.id && !isExist ? (
             <Button onClick={handleBuy} disabled={isPending}>

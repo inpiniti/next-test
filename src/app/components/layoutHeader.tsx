@@ -1,3 +1,4 @@
+import { ComponentName } from '@/components/ComponentName';
 import { SettingsDialog } from '@/components/setting-dialog';
 import ThemeToggle from '@/components/ThemeToggle';
 import { Button } from '@/components/ui/button';
@@ -12,7 +13,8 @@ export default function LayoutHeader() {
   const { filter, setFilter } = useFilterStore();
 
   return (
-    <div className="shrink-0 p-2 flex items-center justify-between h-16">
+    <div className="shrink-0 p-2 flex items-center justify-between h-16 relative">
+      <ComponentName name="<layoutHeader>" />
       <div className="flex items-center gap-2">
         <SidebarTrigger />
         <Input
