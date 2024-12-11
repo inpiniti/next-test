@@ -185,7 +185,12 @@ export default function LayoutDialog() {
           >
             취소
           </Button>
-          {user?.id ? (
+          {user?.id && isExist ? (
+            <>
+              <Button variant="destructive">삭제</Button>
+              <Button>수정</Button>
+            </>
+          ) : user?.id && !isExist ? (
             <Button onClick={handleBuy} disabled={isPending}>
               {isPending ? '구매중...' : '구매'}
             </Button>
