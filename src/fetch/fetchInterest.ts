@@ -1,8 +1,8 @@
 import { TInterest } from '@/interface/TInterest';
 
 export const fetchInterest = {
-  get: async () => {
-    const response = await fetch(`api/interest`);
+  get: async (id: string) => {
+    const response = await fetch(`api/interest?id=${id}`);
     if (!response.ok) {
       throw new Error('네트워크 응답이 올바르지 않습니다.');
     }

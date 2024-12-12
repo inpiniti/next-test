@@ -1,6 +1,6 @@
 export type TBuy = {
   key?: string; // 저장되고 나야 키가 생기기 때문에 optional
-  id: string;
+  id?: string;
   name?: string;
   number?: number;
   price?: number;
