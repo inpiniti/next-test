@@ -51,6 +51,12 @@ export const LayoutASidebar = () => {
     setFilter({ ...filter, isDialogOpen: true });
   };
 
+  // 탭 변경
+  const handleTabs = (value: string) => {
+    setFilter({ ...filter, tab: value });
+    // 목록도 변경되어야 함
+  };
+
   useEffect(() => {
     if (user?.id) {
       refetch();
@@ -60,26 +66,36 @@ export const LayoutASidebar = () => {
   return (
     <aside className="flex flex-col h-full overflow-hidden divide-y min-w-[376px] relative">
       <ComponentName name="<LayoutASidebar>" />
-      <Tabs defaultValue="account" className="shrink-0 p-2">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="account" onClick={() => refetch()}>
+      <Tabs
+        value={filter.tab}
+        onValueChange={handleTabs}
+        className="shrink-0 p-2"
+      >
+        <TabsList className="grid w-full grid-cols-3">
+          <TabsTrigger value="buy" onClick={() => refetch()}>
             구매목록
           </TabsTrigger>
-          <TabsTrigger value="password">관심종목</TabsTrigger>
+          <TabsTrigger value="interest">관심종목</TabsTrigger>
+          <TabsTrigger value="sales">판매목록</TabsTrigger>
         </TabsList>
       </Tabs>
       <ScrollArea className="h-full">
         <div className="gap-2 flex flex-col p-2">
           {!user?.id && <div>로그인이 필요합니다.</div>}
-          {isLoading && <div>Loading...</div>}
-          {isError && <div>데이터를 불러오는 중 오류가 발생했습니다.</div>}
-          {data && data.length === 0 && <div>구매 목록이 없습니다.</div>}
-          {data &&
+          {user?.id && isLoading && <div>Loading...</div>}
+          {user?.id && isError && (
+            <div>데이터를 불러오는 중 오류가 발생했습니다.</div>
+          )}
+          {user?.id && data && data.length === 0 && (
+            <div>구매 목록이 없습니다.</div>
+          )}
+          {user?.id &&
+            data &&
             data.length > 0 &&
             marketListFilter.map((item: IStock, index: number) => (
               <Card
                 key={index}
-                className="w-[360px] p-2 flex flex-col gap-1 cursor-pointer hover:bg-neutral-50"
+                className="w-[360px] p-2 flex flex-col gap-1 cursor-pointer hover:bg-accent"
                 onClick={() => cardClick(item)}
               >
                 <div className="flex gap-2 justify-between items-center">
