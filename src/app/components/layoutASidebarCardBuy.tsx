@@ -16,7 +16,7 @@ export const LayoutASidebarCardBuy = ({ item }: { item: IStock }) => {
   };
   return (
     <Card
-      className="w-[360px] p-2 flex flex-col gap-1 cursor-pointer hover:bg-accent"
+      className="w-[360px] p-2 flex flex-col gap-1 cursor-pointer bg-sky hover:bg-sky-foreground"
       onClick={() => cardClick(item)}
     >
       <div className="flex gap-2 justify-between items-center">

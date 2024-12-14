@@ -9,48 +9,28 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import useLiveKosdaqQuery from '@/hooks/useLiveKosdaqQuery';
-import useLiveNasdaqQuery from '@/hooks/useLiveNasdaqQuery';
-import useLiveSeoulQuery from '@/hooks/useLiveSeoulQuery';
 
 import IStock from '@/interface/IStock';
+import { TBuy } from '@/interface/TBuy';
+import { useGetBuyQuery } from '@/query/buy/useGetBuyQuery';
+import { useGetInterestQuery } from '@/query/interest/useGetInterestQuery';
+import { useAuthStore } from '@/stores/useAuthStore';
 import useFilterStore from '@/stores/useFilterStore';
 import useLiveMarketStore from '@/stores/useLiveMarketStore';
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { FaSort, FaSortDown } from 'react-icons/fa';
 
 export default function Home() {
+  // store
+  const { user } = useAuthStore(); // 유저 정보
   const { marketName, marketList, setMarketId } = useLiveMarketStore();
   const { filter, setFilter } = useFilterStore();
-  //const [sortConfig, setSortConfig] = useState<string | null>('minChange');
 
-  const { toggleFetching: seoulToggle } = useLiveSeoulQuery();
-  const { toggleFetching: kosdaqToggle } = useLiveKosdaqQuery();
-  const { toggleFetching: nasdaqToggle } = useLiveNasdaqQuery();
+  // query
+  const buyQuery = useGetBuyQuery(user?.id);
+  const interestQuery = useGetInterestQuery(user?.id);
 
-  useEffect(() => {
-    switch (filter.market) {
-      case 'seoul':
-        seoulToggle(true);
-        kosdaqToggle(false);
-        nasdaqToggle(false);
-        break;
-      case 'kosdaq':
-        kosdaqToggle(true);
-        seoulToggle(false);
-        nasdaqToggle(false);
-        break;
-      case 'nasdaq':
-        nasdaqToggle(true);
-        seoulToggle(false);
-        kosdaqToggle(false);
-        break;
-      default:
-        // Perform side effect for default case
-        break;
-    }
-  }, [filter.market, seoulToggle, kosdaqToggle, nasdaqToggle]);
-
+  // filter and sort
   const sortedData = useMemo(() => {
     if (filter.sortConfig !== null) {
       let filteredData = marketList;
@@ -121,9 +101,20 @@ export default function Home() {
     return marketList;
   }, [marketList, filter]);
 
+  // 로우 클릭시
   const rowClick = (name: string) => {
     setMarketId(name);
     setFilter({ ...filter, isDialogOpen: true });
+  };
+
+  // 해당 로우가 구매한 종목인가?
+  const isBuy = (name: string) => {
+    return buyQuery.data?.some((item: TBuy) => item.name === name);
+  };
+
+  // 해당 로우가 관심종목인가?
+  const isInterest = (name: string) => {
+    return interestQuery.data?.some((item: TBuy) => item.name === name);
   };
 
   return (
@@ -243,9 +234,15 @@ export default function Home() {
         <TableBody>
           {sortedData.map((live) => (
             <TableRow
-              className={`cursor-pointer ${
-                marketName === live.name ? 'bg-accent' : ''
-              }`}
+              className={`cursor-pointer 
+                ${marketName === live.name ? 'bg-accent' : ''}
+                ${
+                  isInterest(live.name)
+                    ? 'bg-yellow hover:bg-yellow-foreground'
+                    : ''
+                }
+                ${isBuy(live.name) ? 'bg-sky hover:bg-sky-foreground' : ''}
+              `}
               key={live.name}
               onClick={() => rowClick(live.name)}
             >

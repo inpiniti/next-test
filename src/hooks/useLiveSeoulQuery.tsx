@@ -25,6 +25,9 @@ const useLiveSeoulQuery = () => {
   });
 
   useEffect(() => {
+    console.log('useLiveSeoulQuery useEffect');
+    console.log('query.data', query.data);
+    console.log('filter.market', filter.market);
     if (query.data && filter.market === 'seoul') {
       const updatedData = query.data.map((stock: IStock) => {
         const chartData = Array.from({ length: 23 }, (_, index) => {
