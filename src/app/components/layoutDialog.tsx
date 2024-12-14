@@ -1,85 +1,208 @@
 import { Button } from '@/components/ui/button';
-import IStock from '@/interface/IStock';
-import useFilterStore from '@/stores/useFilterStore';
-import useLiveMarketStore from '@/stores/useLiveMarketStore';
-import { useEffect, useMemo, useState } from 'react';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Dialog, DialogContent, DialogFooter } from '@/components/ui/dialog';
-import NumberField from './NumberField';
-import { usePostBuyMutation } from '@/query/buy/usePostBuyMutation';
-import { useAuthStore } from '@/stores/useAuthStore';
-import { DialogTitle } from '@radix-ui/react-dialog';
-import { useGetBuyQuery } from '@/query/buy/useGetBuyQuery';
-import { ShoppingCart, Star } from 'lucide-react';
 import { ComponentName } from '@/components/ComponentName';
+import { DialogTitle } from '@radix-ui/react-dialog';
+import { ShoppingCart, Star } from 'lucide-react';
+import NumberField from './NumberField';
+
+import { useEffect, useMemo, useState } from 'react';
+
+import IStock from '@/interface/IStock';
+
+import useFilterStore from '@/stores/useFilterStore';
+import useLiveMarketStore from '@/stores/useLiveMarketStore';
+import { useAuthStore } from '@/stores/useAuthStore';
+
+import { useGetBuyQuery } from '@/query/buy/useGetBuyQuery';
+import { usePostBuyMutation } from '@/query/buy/usePostBuyMutation';
+import { useDeleteBuyMutation } from '@/query/buy/useDeleteBuyMutation';
+import { usePutBuyMutation } from '@/query/buy/usePutBuyMutation';
+
+import { usePostSalesMutation } from '@/query/sales/usePostSalesMutation';
+import { useGetInterestQuery } from '@/query/interest/useGetInterestQuery';
+import { usePostInterestMutation } from '@/query/interest/usePostInterestMutation';
+import { useDeleteInterestMutation } from '@/query/interest/useDeleteInterestMutation';
+import { TInterest } from '@/interface/TInterest';
 
 export default function LayoutDialog() {
+  // store
   const { filter, setFilter } = useFilterStore();
   const { getMarket, marketName } = useLiveMarketStore();
+  const { user } = useAuthStore(); // 유저 정보
+
+  // buy mutation
+  const postBuyMutate = usePostBuyMutation();
+  const deleteBuyMutation = useDeleteBuyMutation();
+  const putBuyMutation = usePutBuyMutation();
+
+  // sales mutation
+  const postSalesMutate = usePostSalesMutation();
+
+  // interest mutation
+  const postInterestMutate = usePostInterestMutation();
+  const deleteInterestMutate = useDeleteInterestMutation();
+
+  // query
+  const buyQuery = useGetBuyQuery(user?.id);
+  const interestQuery = useGetInterestQuery(user?.id);
 
   // 선택한 종목
   const [selectedStock, setSelectedStock] = useState<IStock>();
-
-  // 유저 정보
-  const { user } = useAuthStore();
-
-  // 뮤테이션
-  const { isPending, mutate, isSuccess } = usePostBuyMutation();
-  const { refetch } = useGetBuyQuery(user?.id);
-
-  // 구매 종목
-  const { data } = useGetBuyQuery(user?.id);
+  // 구매수량
+  const [number, setNumber] = useState(0);
+  // 구매가격
+  const [price, setPrice] = useState(0);
 
   // 구매 종목에 있는지
   const isExist = useMemo(
-    () => data?.some((buyItem: IStock) => buyItem.name === selectedStock?.name),
-    [data, selectedStock]
+    () =>
+      buyQuery.data?.some(
+        (buyItem: IStock) => buyItem.name === selectedStock?.name
+      ),
+    [buyQuery.data, selectedStock]
+  );
+
+  // 관심 종목에 있는지
+  const isInterest = useMemo(
+    () =>
+      interestQuery.data?.some(
+        (interestItem: IStock) => interestItem.name === selectedStock?.name
+      ),
+    [interestQuery.data, selectedStock]
   );
 
   // 구매 종목 정보
   const buyData = useMemo(
-    () => data?.find((buyItem: IStock) => buyItem.name === selectedStock?.name),
-    [data, selectedStock]
+    () =>
+      buyQuery.data?.find(
+        (buyItem: IStock) => buyItem.name === selectedStock?.name
+      ),
+    [buyQuery.data, selectedStock]
   );
 
+  // 리스트에서 stock 선택 시
   useEffect(() => {
     setSelectedStock(getMarket());
   }, [getMarket, marketName]);
 
+  // 다이아로그 자동으로 닫기 시
   const handleOpenChange = (isOpen: boolean) => {
     // alert dialog는 동작하지 않음
     // 일반 dialog로 변경 필요
     setFilter({ ...filter, isDialogOpen: isOpen });
   };
 
-  // 구매수량
-  const [number, setNumber] = useState(0);
-  // 구매가격
-  const [price, setPrice] = useState(0);
+  // 별표 클릭시
+  const handleStarClick = () => {
+    if (selectedStock) {
+      if (isInterest) {
+        // 관심종목 제거
+        const selectedInterest = interestQuery.data.find(
+          (interestItem: TInterest) => interestItem.name === selectedStock.name
+        );
+        deleteInterestMutate.mutate(selectedInterest, {
+          onSuccess: () => {
+            interestQuery.refetch();
+          },
+        });
+      } else {
+        // 관심종목 추가
+        postInterestMutate.mutate(
+          {
+            id: user.id,
+            name: selectedStock.name,
+          },
+          {
+            onSuccess: () => {
+              interestQuery.refetch();
+            },
+          }
+        );
+      }
+    }
+  };
 
   // 구매하기
   const handleBuy = () => {
     if (selectedStock)
-      mutate({
-        id: user.id,
-        name: selectedStock.name,
-        number,
-        price,
-      });
+      postBuyMutate.mutate(
+        {
+          id: user.id,
+          name: selectedStock.name,
+          number,
+          price,
+        },
+        {
+          onSuccess: () => {
+            filter.isDialogOpen = false;
+            buyQuery.refetch();
+          },
+        }
+      );
   };
 
-  // 구매하기 완료후
-  useEffect(() => {
-    if (isSuccess) {
-      refetch();
-      filter.isDialogOpen = false;
-    }
-  }, [isSuccess, refetch, filter]);
+  // 제거하기
+  const handleDeleteBuy = async () => {
+    if (selectedStock)
+      await deleteBuyMutation.mutate(
+        {
+          key: buyData.key,
+        },
+        {
+          onSuccess: () => {
+            filter.isDialogOpen = false;
+            buyQuery.refetch();
+          },
+        }
+      );
+  };
+
+  // 판매하기
+  const handleSeles = () => {
+    // sales 추가
+    postSalesMutate.mutate(
+      {
+        id: user.id,
+        name: buyData.name,
+        number: number,
+        buy_price: buyData.price,
+        sales_price: price,
+      },
+      {
+        onSuccess: async () => {
+          await handleDeleteBuy();
+          buyQuery.refetch();
+        },
+      }
+    );
+  };
+
+  // 수정하기
+  const handlePutBuy = () => {
+    if (selectedStock)
+      putBuyMutation.mutate(
+        {
+          key: buyData.key,
+          id: user.id,
+          name: selectedStock.name,
+          number,
+          price,
+        },
+        {
+          onSuccess: () => {
+            filter.isDialogOpen = false;
+            buyQuery.refetch();
+          },
+        }
+      );
+  };
 
   // 수량 및 가격 변경
   useEffect(() => {
+    // 선택한 종목이 구매한 종목인지 아닌지에 따라서 데이터가 세팅되어야 하는 부분이라 어쩔수 없이 useEffect 사용
     if (isExist) {
       setNumber(buyData.number);
       setPrice(buyData.price);
@@ -98,7 +221,10 @@ export default function LayoutDialog() {
           <div className="absolute top-5 right-9 flex gap-2">
             <div className="text-yellow-500 flex flex-col items-center gap-1">
               <Star
-                className={`text-yellow-400 ${isExist && `fill-current`}`}
+                className={`text-yellow-400 cursor-pointer ${
+                  isInterest && `fill-current`
+                }`}
+                onClick={handleStarClick}
               />
             </div>
             <div className="text-blue-500 flex flex-col items-center gap-1">
@@ -202,18 +328,20 @@ export default function LayoutDialog() {
           </Button>
           {user?.id && isExist ? (
             <>
-              <Button variant="destructive">구매에서 제거</Button>
-              <Button variant="default">판매</Button>
-              <Button>수량 및 가격 수정</Button>
+              <Button variant="destructive" onClick={handleDeleteBuy}>
+                구매에서 제거
+              </Button>
+              <Button variant="default" onClick={handleSeles}>
+                판매
+              </Button>
+              <Button onClick={handlePutBuy}>수량 및 가격 수정</Button>
             </>
           ) : user?.id && !isExist ? (
-            <Button onClick={handleBuy} disabled={isPending}>
-              {isPending ? '구매중...' : '구매'}
+            <Button onClick={handleBuy} disabled={postBuyMutate.isPending}>
+              {postBuyMutate.isPending ? '구매중...' : '구매'}
             </Button>
           ) : (
-            <Button onClick={handleBuy} disabled>
-              로그인 필요
-            </Button>
+            <Button disabled>로그인 필요</Button>
           )}
         </DialogFooter>
         {/* <DialogClose>Close</DialogClose> */}

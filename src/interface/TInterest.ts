@@ -1,5 +1,5 @@
 export type TInterest = {
-  key: number;
-  id: number;
-  name: string;
+  key?: number;
+  id?: number;
+  name?: string;
 };

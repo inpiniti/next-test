@@ -1,8 +1,8 @@
 import { TSales } from '@/interface/TSales';
 
 export const fetchSales = {
-  get: async () => {
-    const response = await fetch(`api/sales`);
+  get: async (id: string) => {
+    const response = await fetch(`api/sales?id=${id}`);
     if (!response.ok) {
       throw new Error('네트워크 응답이 올바르지 않습니다.');
     }

@@ -2,7 +2,7 @@ import { fetchBuy } from '@/fetch/fetchBuy';
 import { TBuy } from '@/interface/TBuy';
 import { useMutation } from '@tanstack/react-query';
 
-export const useDeleteQuery = (buy: TBuy) =>
+export const useDeleteBuyMutation = () =>
   useMutation({
-    mutationFn: () => fetchBuy.delete(buy),
+    mutationFn: (buy: TBuy) => fetchBuy.delete(buy),
   });
