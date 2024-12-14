@@ -20,12 +20,14 @@ import { useEffect, useMemo } from 'react';
 import useLiveSeoulQuery from '@/hooks/useLiveSeoulQuery';
 import useLiveKosdaqQuery from '@/hooks/useLiveKosdaqQuery';
 import useLiveNasdaqQuery from '@/hooks/useLiveNasdaqQuery';
+import useLiveMarketStore from '@/stores/useLiveMarketStore';
 
 export default function LayoutSidebarMarket() {
   const { isMobile } = useSidebar();
 
   // store
   const { filter, setFilter } = useFilterStore();
+  const { setMarketList } = useLiveMarketStore();
 
   // query
   const seoulQuery = useLiveSeoulQuery();
@@ -33,50 +35,45 @@ export default function LayoutSidebarMarket() {
   const nasdaqQuery = useLiveNasdaqQuery();
 
   useEffect(() => {
-    console.log('layoutSidebarMarket useEffect');
-    console.log('filter.market', filter.market);
     if (filter.market) {
       switch (filter.market) {
         case 'seoul':
-          console.log('seoulQuery.toggleFetching(true)');
-          seoulQuery.toggleFetching(false);
-          seoulQuery.toggleFetching(true);
-          seoulQuery.query.refetch();
+          seoulQuery.refetch().then((res) => {
+            setMarketList(res.data);
+          });
           break;
         case 'kosdaq':
-          console.log('kosdaqQuery.toggleFetching(true)');
-          kosdaqQuery.toggleFetching(false);
-          kosdaqQuery.toggleFetching(true);
-          kosdaqQuery.query.refetch();
+          kosdaqQuery.refetch().then((res) => {
+            setMarketList(res.data);
+          });
           break;
         case 'nasdaq':
-          console.log('nasdaqQuery.toggleFetching(true)');
-          nasdaqQuery.toggleFetching(false);
-          nasdaqQuery.toggleFetching(true);
-          nasdaqQuery.query.refetch();
+          nasdaqQuery.refetch().then((res) => {
+            setMarketList(res.data);
+          });
           break;
       }
     }
-  }, []);
+  }, [filter.market]);
 
   // 드랍다운 메뉴 변경 시
   const selectedHnadler = (market: string) => {
     setFilter({ ...filter, market });
     switch (filter.market) {
       case 'seoul':
-        seoulQuery.toggleFetching(true);
-        kosdaqQuery.toggleFetching(false);
-        nasdaqQuery.toggleFetching(false);
+        seoulQuery.refetch().then((res) => {
+          setMarketList(res.data);
+        });
         break;
       case 'kosdaq':
-        kosdaqQuery.toggleFetching(true);
-        seoulQuery.toggleFetching(false);
-        nasdaqQuery.toggleFetching(false);
+        kosdaqQuery.refetch().then((res) => {
+          setMarketList(res.data);
+        });
         break;
       case 'nasdaq':
-        nasdaqQuery.toggleFetching(true);
-        seoulQuery.toggleFetching(false);
-        kosdaqQuery.toggleFetching(false);
+        nasdaqQuery.refetch().then((res) => {
+          setMarketList(res.data);
+        });
         break;
     }
   };

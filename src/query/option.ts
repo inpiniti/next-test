@@ -12,5 +12,5 @@
 export const basic = {
   enabled: true, // 쿼리 활성화 여부
   retry: false, // 실패한 경우 자동 재시도 설정
-  staleTime: 1000 * 60 * 60, // 1 시간동안은 신선하다고 생각함
+  //staleTime: 1000 * 60 * 60, // 1 시간동안은 신선하다고 생각함
 };
