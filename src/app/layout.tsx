@@ -37,7 +37,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <title>stock potatomap - AI 변동율 예측</title>
+        <title>감자증권</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta
           name="description"
