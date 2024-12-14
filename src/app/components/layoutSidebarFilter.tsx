@@ -5,11 +5,12 @@ import {
   FaEquals,
   FaList,
   FaSort,
-} from "react-icons/fa";
+  FaSearch,
+} from 'react-icons/fa';
 
-import useFilterStore from "@/stores/useFilterStore";
-import useLiveMarketStore from "@/stores/useLiveMarketStore";
-import { useMemo } from "react";
+import useFilterStore from '@/stores/useFilterStore';
+import useLiveMarketStore from '@/stores/useLiveMarketStore';
+import { useMemo } from 'react';
 
 import {
   Select,
@@ -19,7 +20,7 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from '@/components/ui/select';
 
 import {
   SidebarGroup,
@@ -27,10 +28,11 @@ import {
   SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuItem,
-} from "@/components/ui/sidebar";
+} from '@/components/ui/sidebar';
 
-import NumberField from "./NumberField";
-import { ComponentName } from "@/components/ComponentName";
+import NumberField from './NumberField';
+import { ComponentName } from '@/components/ComponentName';
+import { Input } from '@/components/ui/input';
 
 export default function LayoutSidebarFilter() {
   const filter = useFilterStore((state) => state.filter);
@@ -49,6 +51,21 @@ export default function LayoutSidebarFilter() {
       <SidebarGroupLabel>필터</SidebarGroupLabel>
       <SidebarGroupContent>
         <SidebarMenu>
+          <SidebarMenuItem>
+            <div className="p-2 text-xs flex flex-col gap-1">
+              <div className="flex items-center">
+                <FaSearch className="mr-2" />
+                종목검색
+              </div>
+              <Input
+                value={filter.stock}
+                onChange={(e) =>
+                  setFilter({ ...filter, stock: e.target.value })
+                }
+                placeholder="종목검색"
+              />
+            </div>
+          </SidebarMenuItem>
           <SidebarMenuItem>
             <div className="p-2 text-xs flex flex-col gap-1">
               <div className="flex items-center">
@@ -201,7 +218,7 @@ export default function LayoutSidebarFilter() {
                   if (prev === value) {
                     setFilter({
                       ...filter,
-                      sortConfig: "",
+                      sortConfig: '',
                     });
                   } else {
                     setFilter({

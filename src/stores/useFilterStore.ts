@@ -35,7 +35,7 @@ const useFilterStore = create<FilterStore>()(
           displayItemCount: 100,
           sortConfig: '',
           isDialogOpen: false,
-          asideOpen: true,
+          asideOpen: false,
           screener: [],
           tab: '',
         },
