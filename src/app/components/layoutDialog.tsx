@@ -22,106 +22,183 @@ import { useDeleteBuyMutation } from '@/query/buy/useDeleteBuyMutation';
 import { usePutBuyMutation } from '@/query/buy/usePutBuyMutation';
 
 import { usePostSalesMutation } from '@/query/sales/usePostSalesMutation';
+import { useGetInterestQuery } from '@/query/interest/useGetInterestQuery';
+import { usePostInterestMutation } from '@/query/interest/usePostInterestMutation';
+import { useDeleteInterestMutation } from '@/query/interest/useDeleteInterestMutation';
+import { TInterest } from '@/interface/TInterest';
 
 export default function LayoutDialog() {
+  // store
   const { filter, setFilter } = useFilterStore();
   const { getMarket, marketName } = useLiveMarketStore();
-
-  // 선택한 종목
-  const [selectedStock, setSelectedStock] = useState<IStock>();
-
-  // 유저 정보
-  const { user } = useAuthStore();
+  const { user } = useAuthStore(); // 유저 정보
 
   // buy mutation
   const postBuyMutate = usePostBuyMutation();
   const deleteBuyMutation = useDeleteBuyMutation();
   const putBuyMutation = usePutBuyMutation();
 
+  // sales mutation
   const postSalesMutate = usePostSalesMutation();
 
-  // buy query
-  const { data, refetch } = useGetBuyQuery(user?.id);
+  // interest mutation
+  const postInterestMutate = usePostInterestMutation();
+  const deleteInterestMutate = useDeleteInterestMutation();
+
+  // query
+  const buyQuery = useGetBuyQuery(user?.id);
+  const interestQuery = useGetInterestQuery(user?.id);
+
+  // 선택한 종목
+  const [selectedStock, setSelectedStock] = useState<IStock>();
+  // 구매수량
+  const [number, setNumber] = useState(0);
+  // 구매가격
+  const [price, setPrice] = useState(0);
 
   // 구매 종목에 있는지
   const isExist = useMemo(
-    () => data?.some((buyItem: IStock) => buyItem.name === selectedStock?.name),
-    [data, selectedStock]
+    () =>
+      buyQuery.data?.some(
+        (buyItem: IStock) => buyItem.name === selectedStock?.name
+      ),
+    [buyQuery.data, selectedStock]
+  );
+
+  // 관심 종목에 있는지
+  const isInterest = useMemo(
+    () =>
+      interestQuery.data?.some(
+        (interestItem: IStock) => interestItem.name === selectedStock?.name
+      ),
+    [interestQuery.data, selectedStock]
   );
 
   // 구매 종목 정보
   const buyData = useMemo(
-    () => data?.find((buyItem: IStock) => buyItem.name === selectedStock?.name),
-    [data, selectedStock]
+    () =>
+      buyQuery.data?.find(
+        (buyItem: IStock) => buyItem.name === selectedStock?.name
+      ),
+    [buyQuery.data, selectedStock]
   );
 
+  // 리스트에서 stock 선택 시
   useEffect(() => {
     setSelectedStock(getMarket());
   }, [getMarket, marketName]);
 
+  // 다이아로그 자동으로 닫기 시
   const handleOpenChange = (isOpen: boolean) => {
     // alert dialog는 동작하지 않음
     // 일반 dialog로 변경 필요
     setFilter({ ...filter, isDialogOpen: isOpen });
   };
 
-  // 구매수량
-  const [number, setNumber] = useState(0);
-  // 구매가격
-  const [price, setPrice] = useState(0);
+  // 별표 클릭시
+  const handleStarClick = () => {
+    if (selectedStock) {
+      if (isInterest) {
+        // 관심종목 제거
+        const selectedInterest = interestQuery.data.find(
+          (interestItem: TInterest) => interestItem.name === selectedStock.name
+        );
+        deleteInterestMutate.mutate(selectedInterest, {
+          onSuccess: () => {
+            interestQuery.refetch();
+          },
+        });
+      } else {
+        // 관심종목 추가
+        postInterestMutate.mutate(
+          {
+            id: user.id,
+            name: selectedStock.name,
+          },
+          {
+            onSuccess: () => {
+              interestQuery.refetch();
+            },
+          }
+        );
+      }
+    }
+  };
 
   // 구매하기
   const handleBuy = () => {
     if (selectedStock)
-      postBuyMutate.mutate({
-        id: user.id,
-        name: selectedStock.name,
-        number,
-        price,
-      });
+      postBuyMutate.mutate(
+        {
+          id: user.id,
+          name: selectedStock.name,
+          number,
+          price,
+        },
+        {
+          onSuccess: () => {
+            filter.isDialogOpen = false;
+            buyQuery.refetch();
+          },
+        }
+      );
   };
 
   // 제거하기
-  const handleDeleteBuy = () => {
+  const handleDeleteBuy = async () => {
     if (selectedStock)
-      deleteBuyMutation.mutate({
-        key: buyData.key,
-      });
+      await deleteBuyMutation.mutate(
+        {
+          key: buyData.key,
+        },
+        {
+          onSuccess: () => {
+            filter.isDialogOpen = false;
+            buyQuery.refetch();
+          },
+        }
+      );
   };
 
   // 판매하기
   const handleSeles = () => {
     // sales 추가
-    postSalesMutate.mutate({
-      id: user.id,
-      name: buyData.name,
-      number: number,
-      buy_price: buyData.price,
-      sales_price: price,
-    });
-    // buy 제거
-    handleDeleteBuy();
+    postSalesMutate.mutate(
+      {
+        id: user.id,
+        name: buyData.name,
+        number: number,
+        buy_price: buyData.price,
+        sales_price: price,
+      },
+      {
+        onSuccess: async () => {
+          await handleDeleteBuy();
+          buyQuery.refetch();
+        },
+      }
+    );
   };
 
   // 수정하기
   const handlePutBuy = () => {
     if (selectedStock)
-      putBuyMutation.mutate({
-        key: buyData.key,
-        id: user.id,
-        name: selectedStock.name,
-        number,
-        price,
-      });
+      putBuyMutation.mutate(
+        {
+          key: buyData.key,
+          id: user.id,
+          name: selectedStock.name,
+          number,
+          price,
+        },
+        {
+          onSuccess: () => {
+            filter.isDialogOpen = false;
+            buyQuery.refetch();
+          },
+        }
+      );
   };
-
-  // 구매하기 완료후
-  useEffect(() => {
-    if (postBuyMutate.isSuccess) {
-      refetch();
-      filter.isDialogOpen = false;
-    }
-  }, [postBuyMutate.isSuccess, refetch, filter]);
 
   // 수량 및 가격 변경
   useEffect(() => {
@@ -144,7 +221,10 @@ export default function LayoutDialog() {
           <div className="absolute top-5 right-9 flex gap-2">
             <div className="text-yellow-500 flex flex-col items-center gap-1">
               <Star
-                className={`text-yellow-400 ${isExist && `fill-current`}`}
+                className={`text-yellow-400 cursor-pointer ${
+                  isInterest && `fill-current`
+                }`}
+                onClick={handleStarClick}
               />
             </div>
             <div className="text-blue-500 flex flex-col items-center gap-1">
