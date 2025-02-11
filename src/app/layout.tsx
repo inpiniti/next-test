@@ -49,7 +49,8 @@ export default function RootLayout({
         />
         <meta name="author" content="ykjung" />
         <meta property="og:type" content="website" />
-        <meta property="og:title" content="감자증권" />
+        <meta property="og:site_name" content="감자증권" />
+        <meta property="og:title" content="감자증권 홈" />
         <meta
           property="og:description"
           content="AI를 사용하여 1시간 뒤부터 1년까지의 변동율을 예측하고, 소팅 및 다양한 필터를 통해 데이터를 분석할 수 있는 사이트입니다."
@@ -66,6 +67,23 @@ export default function RootLayout({
         <meta
           name="naver-site-verification"
           content="5c292ee29fd16599f63e43bf84bfad78bbe4b5e8"
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://stock.potatomap.com",
+              "@type": "감자증권",
+              name: "감자증권 홈",
+              alternateName: [
+                "STOCK",
+                "STOCK POTATO",
+                "Stock Potato",
+                "감자 증권",
+              ],
+              url: "https://stock.potatomap.com/",
+            }),
+          }}
         />
       </head>
       <body
