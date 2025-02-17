@@ -72,7 +72,7 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
-              "@context": "https://stock.potatomap.com",
+              "@context": "https://schema.org",
               "@type": "WebSite",
               name: "감자증권",
               alternateName: [
