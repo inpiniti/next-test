@@ -86,6 +86,7 @@ export default function RootLayout({
             }),
           }}
         />
+        <meta name="naver-site-verification" content="719e4dd6789e34a4c984443e4493d6b01daf7999" />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
