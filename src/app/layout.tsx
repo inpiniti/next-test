@@ -91,6 +91,10 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <div itemscope itemtype="https://schema.org/WebSite">
+          <link itemprop="url" href="https://stock.potatomap.com" />
+          <meta itemprop="name" content="감자증권"/>
+        </div>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
