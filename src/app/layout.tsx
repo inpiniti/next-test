@@ -94,6 +94,7 @@ export default function RootLayout({
         <div itemscope itemtype="https://schema.org/WebSite">
           <link itemprop="url" href="https://stock.potatomap.com" />
           <meta itemprop="name" content="감자증권"/>
+          <meta itemprop="alternateName" content="감자 증권"/>
         </div>
         <ThemeProvider
           attribute="class"
