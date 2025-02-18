@@ -64,6 +64,7 @@ export default function RootLayout({
           name="twitter:card"
           content="https://images.unsplash.com/photo-1621264437251-59d700cfb327?q=80&w=2072&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
         />
+        <link rel="canonical" href="https://stock.potatomap.com/" />
         <meta
           name="naver-site-verification"
           content="5c292ee29fd16599f63e43bf84bfad78bbe4b5e8"
@@ -86,7 +87,6 @@ export default function RootLayout({
             }),
           }}
         />
-        <meta name="naver-site-verification" content="719e4dd6789e34a4c984443e4493d6b01daf7999" />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
