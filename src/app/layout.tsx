@@ -91,11 +91,6 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <div itemscope itemtype="https://schema.org/WebSite">
-          <link itemprop="url" href="https://stock.potatomap.com" />
-          <meta itemprop="name" content="감자증권"/>
-          <meta itemprop="alternateName" content="감자 증권"/>
-        </div>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
@@ -104,6 +99,11 @@ export default function RootLayout({
         >
           <QueryClientProvider client={queryClient}>
             <SidebarProvider>
+              <div itemscope itemtype="https://schema.org/WebSite">
+                <link itemprop="url" href="https://stock.potatomap.com" />
+                <meta itemprop="name" content="감자증권"/>
+                <meta itemprop="alternateName" content="감자 증권"/>
+              </div>
               <LayoutSidebar />
               <div
                 className={`w-full h-svh flex flex-col divide-y overflow-hidden bg-sidebar`}
