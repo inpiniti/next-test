@@ -33,33 +33,42 @@ export default function LayoutSidebarMarket() {
   const seoulQuery = useLiveSeoulQuery();
   const kosdaqQuery = useLiveKosdaqQuery();
   const nasdaqQuery = useLiveNasdaqQuery();
-
   useEffect(() => {
     if (filter.market) {
-      switch (filter.market) {
-        case 'seoul':
-          seoulQuery.refetch().then((res) => {
-            setMarketList(res.data);
-          });
-          break;
-        case 'kosdaq':
-          kosdaqQuery.refetch().then((res) => {
-            setMarketList(res.data);
-          });
-          break;
-        case 'nasdaq':
-          nasdaqQuery.refetch().then((res) => {
-            setMarketList(res.data);
-          });
-          break;
-      }
+      queryRefetch(filter.market);
     }
-  }, [filter.market]);
+  }, []);
+
+  // useEffect(() => {
+  //   if (filter.market) {
+  //     switch (filter.market) {
+  //       case 'seoul':
+  //         seoulQuery.refetch().then((res) => {
+  //           setMarketList(res.data);
+  //         });
+  //         break;
+  //       case 'kosdaq':
+  //         kosdaqQuery.refetch().then((res) => {
+  //           setMarketList(res.data);
+  //         });
+  //         break;
+  //       case 'nasdaq':
+  //         nasdaqQuery.refetch().then((res) => {
+  //           setMarketList(res.data);
+  //         });
+  //         break;
+  //     }
+  //   }
+  // }, [filter.market]);
 
   // 드랍다운 메뉴 변경 시
   const selectedHnadler = (market: string) => {
     setFilter({ ...filter, market });
-    switch (filter.market) {
+    queryRefetch(market);
+  };
+
+  const queryRefetch = (market: string) => {
+    switch (market) {
       case 'seoul':
         seoulQuery.refetch().then((res) => {
           setMarketList(res.data);

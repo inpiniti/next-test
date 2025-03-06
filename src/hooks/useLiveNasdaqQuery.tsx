@@ -12,6 +12,8 @@ const useLiveNasdaqQuery = () =>
       return data;
     },
     refetchInterval: 60000, // 1분마다 패칭
+    retry: false, // 실패 시 재시도
+    enabled: false,
   });
 
 export default useLiveNasdaqQuery;

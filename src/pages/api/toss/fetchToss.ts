@@ -1,5 +1,5 @@
-import { fetchStockCodeToSymbol } from "./fetchStockCodeToSymbol";
-import { insert, select } from "./table";
+import { fetchStockCodeToSymbol } from './fetchStockCodeToSymbol';
+import { insert, select } from './table';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export const fetchToss = async ({
@@ -12,9 +12,9 @@ export const fetchToss = async ({
   const response = await fetch(
     `https://wts-cert-api.tossinvest.com/api/v2/screener/screen`,
     {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         pagingParam: {
@@ -24,29 +24,29 @@ export const fetchToss = async ({
         },
         filters: [
           {
-            id: "시장",
+            id: '시장',
             conditions: [
               {
-                id: "시장_선택",
-                type: "STRING",
-                value: "NSQ",
+                id: '시장_선택',
+                type: 'STRING',
+                value: 'NSQ',
               },
             ],
           },
           ...filters,
         ],
         sort,
-        nation: "us",
+        nation: 'us',
       }),
     }
   );
   if (!response.ok) {
-    throw new Error("네트워크 응답이 올바르지 않습니다.");
+    throw new Error('네트워크 응답이 올바르지 않습니다.');
   }
   const data = await response.json();
   const stockCodeList = data.result.stocks.map((stock: any) => stock.stockCode);
 
-  console.log("select");
+  console.log('select');
   const tossTableList = await select();
   // tossTableList = [{ stockCode: 'NAS0230301005', symbol: 'ACAD' }, ...]
   const symbolList = [];
@@ -62,9 +62,9 @@ export const fetchToss = async ({
     if (symbol) {
       symbolList.push(symbol);
     } else {
-      console.log("fetchStockCodeToSymbol");
+      console.log('fetchStockCodeToSymbol');
       const symbol = await fetchStockCodeToSymbol(stockCode);
-      console.log("insert");
+      console.log('insert');
       await insert({ stockCode, symbol });
       symbolList.push(symbol);
     }
