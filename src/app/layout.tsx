@@ -59,12 +59,12 @@ export default function RootLayout({
           property="og:image"
           content="https://images.unsplash.com/photo-1621264437251-59d700cfb327?q=80&w=2072&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
         />
-        <meta property="og:url" content="https://stock.potatomap.com/" />
+        <meta property="og:url" content="https://potatomap.com/" />
         <meta
           name="twitter:card"
           content="https://images.unsplash.com/photo-1621264437251-59d700cfb327?q=80&w=2072&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
         />
-        <link rel="canonical" href="https://stock.potatomap.com/" />
+        <link rel="canonical" href="https://potatomap.com/" />
         <meta
           name="naver-site-verification"
           content="5c292ee29fd16599f63e43bf84bfad78bbe4b5e8"
@@ -83,7 +83,7 @@ export default function RootLayout({
                 "감자 증권",
                 "감자증권",
               ],
-              url: "https://stock.potatomap.com/",
+              url: "https://potatomap.com/",
             }),
           }}
         />
@@ -92,9 +92,9 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <div itemScope itemType="https://schema.org/WebSite">
-          <link itemProp="url" href="https://stock.potatomap.com" />
-          <meta itemProp="name" content="감자증권"/>
-          <meta itemProp="alternateName" content="감자 증권"/>
+          <link itemProp="url" href="https://potatomap.com" />
+          <meta itemProp="name" content="감자증권" />
+          <meta itemProp="alternateName" content="감자 증권" />
         </div>
         <ThemeProvider
           attribute="class"
